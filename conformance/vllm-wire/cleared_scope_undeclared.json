@@ -1,0 +1,21 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "cleared_scope_undeclared",
+ "note": "CONSTRUCTED: the same fieldless clear in a batch that declares no dp_rank, so no dimension is scoped. Transduced as declared -- absent, global -- never defaulted to zero; the bridge releases across all origins and all tiers",
+ "source": "s0",
+ "wire_hex": "92cb41da99d221898bd19181a474797065b0416c6c426c6f636b73436c6561726564",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1785153670149.1587,
+    "type": "Cleared"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

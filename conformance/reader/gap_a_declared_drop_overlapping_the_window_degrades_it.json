@@ -1,0 +1,44 @@
+{
+ "fixture_version": "v0",
+ "name": "gap_a_declared_drop_overlapping_the_window_degrades_it",
+ "note": "the producer names what its disk cap reclaimed (spec 2.5): segments 0..2 are gone by declaration, and a declared loss a reader ignores is worse than an undetected one -- the window it overlaps is indeterminate (spec 5.4)",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 3,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "segments_dropped",
+    "at_ms": 1785153670000.0,
+    "incarnation": "1785153600000-100",
+    "count": 3,
+    "first_seq": 0,
+    "last_seq": 2,
+    "first": "seg-1785153600000-100-0.jsonl",
+    "last": "seg-1785153600000-100-2.jsonl"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153680000.0,
+    "content_id": "c1"
+   }
+  ]
+ ],
+ "expect": {
+  "gap_degraded": [
+   "segments_dropped"
+  ]
+ }
+}

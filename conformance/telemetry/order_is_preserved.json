@@ -1,0 +1,114 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "order_is_preserved",
+ "note": "a mixed sequence across two instances: one record per event, in arrival order, nothing reordered or coalesced",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "b",
+   "type": "Stored",
+   "at_ms": 1785153670001.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670002.0,
+   "block_hash": 10841253731892115301,
+   "medium": "GPU"
+  },
+  {
+   "source": "b",
+   "type": "Cleared",
+   "at_ms": 1785153670003.0,
+   "medium": "GPU",
+   "dp_rank": 0,
+   "group_idx": 0
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670004.0,
+   "block_hash": 16032592773066255487,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "clear": 1,
+   "evict": 1,
+   "store": 3
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "b",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670001.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670002.0,
+    "kind": "evict",
+    "block_id": "10841253731892115301",
+    "tier": "GPU"
+   },
+   {
+    "instance_id": "b",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670003.0,
+    "kind": "clear",
+    "scope": "all",
+    "tier": "GPU"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670004.0,
+    "kind": "store",
+    "block_id": "16032592773066255487",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

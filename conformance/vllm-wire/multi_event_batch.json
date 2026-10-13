@@ -1,0 +1,37 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sha256.jsonl#43",
+ "name": "multi_event_batch",
+ "note": "several events of mixed kinds in one batch, order preserved",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221c8488d9284a474797065ac426c6f636b52656d6f766564ac626c6f636b5f68617368657391cf1ce8797bd1b2394ea66d656469756da3475055a967726f75705f696478008ba474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf5b07ba74940eabeab1706172656e745f626c6f636b5f68617368cf8456813a92c025a4a9746f6b656e5f696473dc00101815171715150f10ccc62019ccdc11121316aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da3475055a96c6f72615f6e616d65c0aa65787472615f6b65797391c0a967726f75705f69647800b26b765f63616368655f737065635f6b696e64ae66756c6c5f617474656e74696f6e00",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1785153671129.4282,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 2083048400364910926,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1785153671129.4282,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 6559416392151378922,
+    "parent_hash": 9535951349573756324,
+    "block_size": 16,
+    "medium": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

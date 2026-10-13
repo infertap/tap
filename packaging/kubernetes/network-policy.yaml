@@ -1,0 +1,30 @@
+# What keeps the engine's KV-events stream inside the pod.
+#
+# The publisher binds every interface, and what it publishes is tokenized prompt content
+# with no authentication (docs/trust.md, section 2). The tap reaches it over the pod's own
+# loopback, which no NetworkPolicy governs. This policy governs everything else: it selects
+# the engine pods and admits ingress to the serving port alone, so the publisher's ports
+# (5557, 5657, and base + rank under data parallelism) are reachable from no other pod.
+#
+# Edit the selector and the serving port to your Deployment's.
+#
+# Two things this file cannot do. Policies are additive: Kubernetes admits what ANY policy
+# selecting the pod admits, so a namespace-wide or label-wide allow that already reaches
+# these pods admits the publisher's ports through this one. And a cluster whose network
+# plugin does not enforce NetworkPolicy gets no isolation from it at all. So the install
+# is not done until the ports are shown closed from another pod (packaging/kubernetes/
+# README.md, "Prove the isolation"): the check is what establishes it, not this text.
+# Applied by kustomization.yaml beside the example, and asserted against the example's
+# labels by tests/kubernetes_manifests.rs.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vllm-kv-events-stays-in-pod
+spec:
+  podSelector:
+    matchLabels: { app: vllm }
+  policyTypes: [Ingress]
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8000

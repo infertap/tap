@@ -1,0 +1,7 @@
+# Review ownership. The last matching pattern takes precedence.
+*                       @fishercort
+/src/source/            @fishercort
+/src/sink/              @fishercort
+/conformance/           @fishercort
+/packaging/             @fishercort
+/.github/               @fishercort

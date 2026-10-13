@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a capability or improvement.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check ROADMAP.md for planned work. Describe any impact on the public record contract; contract changes are reviewed in inference-events.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you are trying to observe or do with the tap, and what stops you today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: The proposal
+      description: What the tap should do. If it is a new engine, say which event stream it publishes and how the tap subscribes without entering the request path.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What you tried instead, and why it is not enough.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - an engine adapter or a transport
+        - the event model or the record stream (a spec change)
+        - egress, pseudonymization or the guards
+        - segments, shipping, the object-store layout
+        - the install (systemd, the image, the sidecar)
+        - the operator's experience (stderr, accounting, flags)
+        - other

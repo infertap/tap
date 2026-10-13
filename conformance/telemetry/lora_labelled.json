@@ -1,0 +1,43 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "lora_labelled",
+ "note": "a LoRA-served block: both lora_id and lora_name ride the record, the only per-request tenant key the engine offers besides the salt",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "lora_id": 7,
+   "lora_name": "customer-adapter"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "store": 1
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "lora_id": 7,
+    "lora_name": "customer-adapter",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

@@ -1,0 +1,174 @@
+{
+ "fixture_version": "v0",
+ "name": "gap_scope_a_producer_level_loss_degrades_every_covered_instance",
+ "note": "one producer watching two instances (endpoints[].source names i0 AND i1), a hole in ITS sequence, and surviving records mentioning only i0: segments belong to the incarnation, so the loss belongs to everything it observed -- i1 degrades despite having no surviving records at all, which is exactly the instance a record-driven reader forgets (spec 5.1). i9, watched by its own intact run, stands. This is also the first corpus stream in which one incarnation covers several instances -- the producer-fixture half of 5.1's ledger row",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     },
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153675000.0,
+    "content_id": "c1"
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 2,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153740000.0,
+    "content_id": "c2"
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i9",
+      "endpoint": "tcp://i9:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "store",
+    "instance_id": "i9",
+    "block_id": "b3",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153676000.0,
+    "content_id": "c3"
+   }
+  ]
+ ],
+ "expect": {
+  "holder_register": [
+   {
+    "instance": "i0",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "span_ms": [
+     1785153670000.0,
+     1785153770000.0
+    ],
+    "register": "indeterminate"
+   },
+   {
+    "instance": "i1",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "span_ms": [
+     1785153670000.0,
+     1785153770000.0
+    ],
+    "register": "indeterminate"
+   },
+   {
+    "instance": "i9",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "span_ms": [
+     1785153670000.0,
+     1785153770000.0
+    ],
+    "register": "none"
+   }
+  ]
+ }
+}

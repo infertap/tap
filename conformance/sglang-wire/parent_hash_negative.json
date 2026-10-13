@@ -1,0 +1,28 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-main.jsonl#127",
+ "name": "parent_hash_negative",
+ "note": "a negative parent hash, read the same way",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6b29b96f79187a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf1c12083cff208142b1706172656e745f626c6f636b5f68617368d3bb018b4bd7ecec25a9746f6b656e5f696473dc001016160f1317150fccc62019ccdc131716160faa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505500",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790696138431.089,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 2022688240714154306,
+    "parent_hash": 13475204717930671141,
+    "block_size": 16,
+    "medium": "GPU"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

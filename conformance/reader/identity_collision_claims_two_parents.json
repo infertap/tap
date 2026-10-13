@@ -1,0 +1,67 @@
+{
+ "fixture_version": "v0",
+ "name": "identity_collision_claims_two_parents",
+ "note": "the uniqueness property's announced failure (spec 3.1 property 5): one content_id reached through two chains claims two parents. A conforming reader surfaces the contradiction as a count -- here exactly one conflicted identity -- and must not fold the claims into one edge, because the fold is what would make a collision invisible",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "p1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "cp1"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "p2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "content_id": "cp2"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670020.0,
+    "content_id": "cMERGED",
+    "parent_id": "p1"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670030.0,
+    "content_id": "cMERGED",
+    "parent_id": "p2"
+   }
+  ]
+ ],
+ "expect": {
+  "parent_conflicts": 1
+ }
+}

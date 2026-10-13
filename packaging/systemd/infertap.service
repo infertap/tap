@@ -1,0 +1,72 @@
+# Requires systemd 247+ for LoadCredential. Install using docs/install.md.
+# Releases link the versioned installation guide from the archive README.
+[Unit]
+Description=infertap - passive, out-of-band KV-cache telemetry tap
+Documentation=https://github.com/infertap/tap/blob/main/docs/install.md
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=exec
+# Optional environment overrides take precedence over TOML settings.
+EnvironmentFile=-/etc/default/infertap
+# Expose a private credential file; keep key material out of argv and environment.
+LoadCredential=pseudonym.key:/etc/infertap/pseudonym.key
+# Validate configuration without connecting to the engine.
+ExecStartPre=/usr/local/bin/infertap check-config \
+    --config /etc/infertap/tap.toml \
+    --key-file ${CREDENTIALS_DIRECTORY}/pseudonym.key
+ExecStart=/usr/local/bin/infertap \
+    --config /etc/infertap/tap.toml \
+    --key-file ${CREDENTIALS_DIRECTORY}/pseudonym.key
+Restart=on-failure
+RestartSec=2
+# systemd 254+ enables backoff; earlier versions use RestartSec.
+RestartSteps=5
+RestartMaxDelaySec=60
+
+# Use the same account as the shipper so it can delete uploaded segments.
+User=infertap
+Group=infertap
+RemoveIPC=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+StateDirectory=infertap
+ReadWritePaths=/var/lib/infertap
+UMask=0027
+
+RestrictAddressFamilies=AF_INET AF_INET6
+IPAccounting=yes
+
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+RestrictNamespaces=yes
+RestrictRealtime=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+SystemCallArchitectures=native
+
+# The OS memory limit includes file cache; the process RSS guard is separate.
+MemoryMax=1G
+# Allow the main thread, converter, and ZMQ worker threads.
+TasksMax=16
+LimitNOFILE=256
+CPUQuota=150%
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,404 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-main.jsonl#73",
+ "name": "multi_event_batch",
+ "note": "several events of mixed kinds in one batch, order preserved",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6b2576d019283a474797065ac426c6f636b52656d6f766564ac626c6f636b5f686173686573dc002fd3af1443ca90c9c4a7d3a014198a744c709dd3e31e6a49a04f9e94cf7f2d8dd5e5564c00d39f7cb30949afddbdd3ca70d0a5550912c9d3a2700c5c6d06859dcf54c74758939c8b11d3e74e7e634c95e186cf02d22061438a431ecf1672c24dc84d2080cf51bbdd3472369f83d3aaa4f8e0e3ab3d4ad3feb6bf0dfda4894cd3eb6256da60d2c7c1cf0c032908f353d258d39ca46b7c8731d505d38fc7974d08b61bebcf5323b9c6f55480d4d3bab2851223485ccacf314d27165c543d3dcf4d90ddd9c0975309cf4a638a38587c34e1d3b07e0dcbdb395031cf77b85c1b11d91d4ad3becf6e1c23b1adeed3d074ed9731e90b70cf73f785b31b9ecb03d3a8a9d773be165850cf5e6215bd247b9734d3d97f76495715967dd3cd8c8bb9aa67f4b2d3d6d53cb7b83843c9d3d95dc8242c17caf5d3e23d52636c268aaed3f0c717486b6e51fbcf3da87d279c677239d3c0c5d91d5fa223e3d3a6fb80ff2e5bcb0fd3ef7e2b3a70eb9e20d3b665f4d6f88721a5d3c9bfba23e0446505cf1b2d2c4e114351e1d3bbdeb67a064d012dd3dac8920005855518d3a0f03394421c68c3cf1e668bb2da70ae21a66d656469756da347505587a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf4bdc5adc2f11569ab1706172656e745f626c6f636b5f68617368d3b35b63305ae4efdca9746f6b656e5f696473dc0010cd1220cd3ac54ecd205fcd010f30161219ccdc140f120f1311aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505500",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 12615782993463198887,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 11534872628050030749,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 16365634960365690516,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 9164136766584015872,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 11492257201615003069,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 14587388601567875785,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 11704869022641587613,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 6108929865310571281,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 16667398235896537478,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 203260535302144798,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 1617568855508197504,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 5889544155041275779,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 12296226527404309834,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 18354067398205933900,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 16961214642557994945,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 865580671804101208,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 11287264748685612293,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 10360415824903543787,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 5990836193503510740,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 13452961349856943306,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 3552538658056977725,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 5589211064875569929,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 5360279956108358881,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 12717617566948347953,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 8626746357561498954,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 13749329254522400238,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 15020891890820647792,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 8356294637918276355,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 12153481961546340432,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 6801022289387951924,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 15672375285638338173,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 14811366904058868914,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 15480346053923324873,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 15662895136748587765,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 16302276813120768686,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 17349861689275601403,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 4442938641482215993,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 13890747345875903459,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 12032352662933195535,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 17257278352132906528,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 13143180291680444837,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 14537542785424450821,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 1958270126784729569,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 13537458165130264877,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 15765011024400700696,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 11596825752336361667,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 2190591869047582241,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696137366.028,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 5466343949449909914,
+    "parent_hash": 12924032615004303324,
+    "block_size": 16,
+    "medium": "GPU"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

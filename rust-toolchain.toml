@@ -1,0 +1,5 @@
+# Version-pinned (not floating stable): local and CI build with the identical toolchain, so
+# clippy/rustfmt results are reproducible. Bumps are deliberate commits.
+[toolchain]
+channel = "1.97.1"
+components = ["rustfmt", "clippy"]

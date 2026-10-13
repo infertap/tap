@@ -1,0 +1,205 @@
+{
+ "corpus": "lifecycle",
+ "schema_version": "v0",
+ "note": "Pins the three lifecycle record kinds byte-for-byte: agent_start (boot + config summary), heartbeat (cumulative envelope stats + per-endpoint sub-stats), agent_stop (reason + closing stats). Absent-not-null is pinned deliberately: the stop case omits noraw_scanned and rss_bytes, and one heartbeat endpoint omits last_msg_at_ms (nothing seen yet). Lifecycle records carry no instance_id (agent-scoped) and no block ids (the pseudonymizer leaves them unmapped). Timestamps use epoch milliseconds to expose unit conversion errors. capacity_cases pins the identity_refused signal separately: instance-scoped by design (it declares a loss for one observed holder), with engine-clock window fields beside a producer-clock at_ms, named apart.",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "agent_version": "0.0.0-fixture",
+ "cases": [
+  {
+   "kind": "agent_start",
+   "at_ms": 1785153670000.0,
+   "config": {
+    "key_epoch": 3,
+    "endpoint_count": 2,
+    "max_payload_bytes": 16777216,
+    "egress": "pseudonymized",
+    "canary": "2a0d53e8a23631a0e8ab966069f98f3c",
+    "reuse_reporting": "unlabelled"
+   },
+   "expect": {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.0.0-fixture",
+    "endpoint_count": 2,
+    "max_payload_bytes": 16777216,
+    "egress": "pseudonymized",
+    "canary": "2a0d53e8a23631a0e8ab966069f98f3c",
+    "reuse_reporting": "unlabelled"
+   }
+  },
+  {
+   "kind": "heartbeat",
+   "at_ms": 1785153730000.0,
+   "stats": {
+    "canary": "2a0d53e8a23631a0e8ab966069f98f3c",
+    "reuse_reporting": "unlabelled",
+    "msgs_seen": 10,
+    "dropped": 1,
+    "oversized": 0,
+    "noraw_scanned": 42,
+    "unknown_types": 2,
+    "events_ingested": 37,
+    "content_unresolved": 5,
+    "content_bridge_entries": 128,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 1,
+    "rss_bytes": 20480000,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://127.0.0.1:5557",
+      "msgs_seen": 10,
+      "dropped": 1,
+      "last_msg_at_ms": 1785153671500.0,
+      "topic": "kv@10.0.1.7:8000@meta-llama/Llama-3.1-8B-Instruct",
+      "publisher_restarts": 1
+     },
+     {
+      "source": "i1",
+      "endpoint": "tcp://127.0.0.1:5558",
+      "msgs_seen": 0,
+      "dropped": 0,
+      "last_msg_at_ms": null,
+      "publisher_restarts": 0
+     }
+    ]
+   },
+   "expect": {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 1,
+    "oversized": 0,
+    "noraw_scanned": 42,
+    "unknown_types": 2,
+    "events_ingested": 37,
+    "content_unresolved": 5,
+    "content_bridge_entries": 128,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 1,
+    "canary": "2a0d53e8a23631a0e8ab966069f98f3c",
+    "reuse_reporting": "unlabelled",
+    "rss_bytes": 20480000,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://127.0.0.1:5557",
+      "msgs_seen": 10,
+      "dropped": 1,
+      "last_msg_at_ms": 1785153671500.0,
+      "topic": "kv@10.0.1.7:8000@meta-llama/Llama-3.1-8B-Instruct",
+      "publisher_restarts": 1
+     },
+     {
+      "source": "i1",
+      "endpoint": "tcp://127.0.0.1:5558",
+      "msgs_seen": 0,
+      "dropped": 0,
+      "publisher_restarts": 0
+     }
+    ]
+   }
+  },
+  {
+   "kind": "agent_stop",
+   "at_ms": 1785153760000.0,
+   "reason": "signal",
+   "stats": {
+    "canary": "2a0d53e8a23631a0e8ab966069f98f3c",
+    "reuse_reporting": "unlabelled",
+    "msgs_seen": 12,
+    "dropped": 1,
+    "oversized": 0,
+    "noraw_scanned": null,
+    "unknown_types": 2,
+    "events_ingested": 44,
+    "content_unresolved": 5,
+    "content_bridge_entries": 128,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 1,
+    "rss_bytes": null,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://127.0.0.1:5557",
+      "msgs_seen": 10,
+      "dropped": 1,
+      "last_msg_at_ms": 1785153671500.0,
+      "topic": "kv@10.0.1.7:8000@meta-llama/Llama-3.1-8B-Instruct",
+      "publisher_restarts": 1
+     },
+     {
+      "source": "i1",
+      "endpoint": "tcp://127.0.0.1:5558",
+      "msgs_seen": 0,
+      "dropped": 0,
+      "last_msg_at_ms": null,
+      "publisher_restarts": 0
+     }
+    ]
+   },
+   "expect": {
+    "kind": "agent_stop",
+    "at_ms": 1785153760000.0,
+    "reason": "signal",
+    "msgs_seen": 12,
+    "dropped": 1,
+    "oversized": 0,
+    "unknown_types": 2,
+    "events_ingested": 44,
+    "content_unresolved": 5,
+    "content_bridge_entries": 128,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 1,
+    "canary": "2a0d53e8a23631a0e8ab966069f98f3c",
+    "reuse_reporting": "unlabelled",
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://127.0.0.1:5557",
+      "msgs_seen": 10,
+      "dropped": 1,
+      "last_msg_at_ms": 1785153671500.0,
+      "topic": "kv@10.0.1.7:8000@meta-llama/Llama-3.1-8B-Instruct",
+      "publisher_restarts": 1
+     },
+     {
+      "source": "i1",
+      "endpoint": "tcp://127.0.0.1:5558",
+      "msgs_seen": 0,
+      "dropped": 0,
+      "publisher_restarts": 0
+     }
+    ]
+   }
+  }
+ ],
+ "capacity_cases": [
+  {
+   "kind": "identity_refused",
+   "at_ms": 1785153730000.0,
+   "refusal": {
+    "instance_id": "i0",
+    "dp_rank": 0,
+    "group_idx": 1,
+    "refused": 2048,
+    "window_start_ms": 1785153671000.25,
+    "window_end_ms": 1785153711000.75
+   },
+   "expect": {
+    "kind": "identity_refused",
+    "at_ms": 1785153730000.0,
+    "instance_id": "i0",
+    "dp_rank": 0,
+    "group_idx": 1,
+    "refused": 2048,
+    "window_start_ms": 1785153671000.25,
+    "window_end_ms": 1785153711000.75
+   }
+  }
+ ]
+}

@@ -1,0 +1,329 @@
+# On a version tag, run code and supply-chain checks, build both architectures,
+# smoke-test the artifacts, sign with Sigstore, and publish. Manual dispatch
+# runs validation without publishing. Actions and release tools are pinned.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+permissions:
+  contents: write
+  id-token: write # the OIDC token Fulcio exchanges for a signing certificate; grants nothing by itself
+  packages: write # push the release image to GHCR
+  attestations: write # GitHub build-provenance attestations over the release artifacts
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # No libzmq package, deliberately: the smoke step runs the packaged binary on this
+      # runner with no zmq package installed, which re-proves the static link every release.
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+
+      - name: tag matches the crate version
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        run: |
+          V="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')"
+          if [ "v$V" != "$GITHUB_REF_NAME" ]; then
+            echo "tag is $GITHUB_REF_NAME but Cargo.toml says $V; the released binary's" \
+                 "agent_start records would self-report the wrong version"
+            exit 1
+          fi
+
+      - name: validate release notes before publishing
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        run: |
+          set -euo pipefail
+          # Require an annotated tag with a body; lightweight tags expose commit text.
+          test "$(git for-each-ref --format='%(objecttype)' "refs/tags/${GITHUB_REF_NAME}")" = tag || {
+            echo "::error::Release tags must be annotated."
+            exit 1
+          }
+          git tag -l --format='%(contents:body)' "$GITHUB_REF_NAME" > RELEASE_NOTES.md
+          grep -q '[^[:space:]]' RELEASE_NOTES.md || {
+            echo "::error::The release tag needs a nonempty body for release notes."
+            exit 1
+          }
+
+      - name: select artifact version
+        env:
+          IS_RELEASE: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+        run: |
+          if [ "$IS_RELEASE" = true ]; then
+            echo "ARTIFACT_VERSION=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          else
+            echo "ARTIFACT_VERSION=dev-${GITHUB_SHA:0:12}" >> "$GITHUB_ENV"
+          fi
+
+      - name: code gate on the selected commit
+        run: |
+          scripts/fetch-capture.sh
+          scripts/check-code.sh
+
+      - name: supply-chain gate
+        run: |
+          cargo install cargo-deny@0.20.2 --locked
+          cargo deny check
+          cargo install cargo-audit@0.22.2 --locked
+          cargo audit
+
+      - name: build both architectures on the supported glibc baseline
+        # Build in Debian 11 to target glibc 2.31 on both architectures.
+        # The cross compiler builds vendored libzmq with the target CC/CXX/AR settings.
+        # Install build tools as root, then restore workspace ownership to the runner.
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            -v "$PWD:/src" -w /src \
+            -e CARGO_HOME=/src/.cargo-home \
+            -e CARGO_TERM_COLOR=always \
+            -e RUSTFLAGS="$RUSTFLAGS" \
+            rust@sha256:8f51ac47c23875aa82c24ba20f54bacf49655406627ffd007f3bf1a9b6b08a24 \
+            sh -c 'set -e
+                   apt-get update -qq
+                   apt-get install -y -qq --no-install-recommends g++ g++-aarch64-linux-gnu
+                   rustup target add aarch64-unknown-linux-gnu
+                   cargo build --release --features zmq --locked
+                   CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc \
+                   CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++ \
+                   AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar \
+                   CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc \
+                   cargo build --release --features zmq --locked --target aarch64-unknown-linux-gnu'
+          sudo chown -R "$(id -u):$(id -g)" target .cargo-home
+          mkdir -p dist/amd64 dist/arm64
+          cp target/release/infertap dist/amd64/infertap
+          cp target/aarch64-unknown-linux-gnu/release/infertap dist/arm64/infertap
+
+      - name: both binaries meet the shared-library version floors
+        # Check both architectures against glibc 2.31 and GLIBCXX_3.4.28.
+        # Print required shared libraries for comparison with the install documentation.
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y -qq --no-install-recommends binutils-aarch64-linux-gnu >/dev/null
+          FLOOR=2.31
+          CXXFLOOR=3.4.28
+          check() {
+            bin="$1"; od="$2"
+            echo "== $bin: shared libraries this binary needs:"
+            "$od" -p "$bin" | grep NEEDED
+            cxx=$("$od" -T "$bin" | grep -oE 'GLIBCXX_3\.4\.[0-9]+' | sort -t. -k3 -n -u | tail -1)
+            echo "highest libstdc++ required: ${cxx:-none}"
+            if [ -n "$cxx" ]; then
+              cxxgot=${cxx#GLIBCXX_}
+              if [ "$(printf '%s\n%s\n' "$cxxgot" "$CXXFLOOR" | sort -t. -k3 -n | tail -1)" != "$CXXFLOOR" ]; then
+                echo "::error::$bin needs libstdc++ ${cxxgot}, above the ${CXXFLOOR} floor."
+                exit 1
+              fi
+            fi
+            worst=$("$od" -T "$bin" | grep -oE 'GLIBC_2\.[0-9]+' | sort -t. -k2 -n -u | tail -1)
+            echo "highest glibc required: ${worst}"
+            got=${worst#GLIBC_}
+            # Sort the two numerically and check ours is not the larger: a plain string compare
+            # gets 2.9 vs 2.31 backwards, and being right about that comparison is the step.
+            if [ "$(printf '%s\n%s\n' "$got" "$FLOOR" | sort -t. -k2 -n | tail -1)" != "$FLOOR" ]; then
+              echo "::error::$bin needs glibc ${got}, above the ${FLOOR} floor; it will not start on RHEL 9 or Amazon Linux 2023 (2.34)."
+              "$od" -T "$bin" | grep -E "GLIBC_2\.(3[2-9]|[4-9])" | head
+              exit 1
+            fi
+          }
+          check dist/amd64/infertap objdump
+          check dist/arm64/infertap aarch64-linux-gnu-objdump
+
+      - name: the release binary end to end, against the stub publisher
+        # The socket path of the exact binary that ships, proven before it is packaged.
+        run: |
+          python3 -m pip install --quiet pyzmq
+          scripts/e2e-stub.sh dist/amd64/infertap
+
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: package
+        # One tarball per architecture, each a directory holding everything a systemd
+        # deployment installs: the binary plus the unit files whose headers are the install
+        # instructions, the configuration template, the licence and the notices. An operator
+        # needs no checkout of this repo to run a release. `$NAME` is defined once and read by
+        # every later step, so a later step cannot match something this step did not build.
+        run: |
+          set -euo pipefail
+          cargo install cargo-cyclonedx@0.5.9 --locked
+          cargo cyclonedx --format json --features zmq
+          python3 -c 'import json; names = {c["name"] for c in json.load(open("infertap.cdx.json"))["components"]}; assert {"zmq", "zmq-sys", "zeromq-src", "fs2"} <= names, names'
+          python3 scripts/third-party-notices.py --check
+          for arch in x86_64 aarch64; do
+            NAME="infertap-${ARTIFACT_VERSION}-${arch}-linux"
+            dist=dist/amd64; [ "$arch" = aarch64 ] && dist=dist/arm64
+            mkdir -p "stage/$NAME"
+            cp "$dist/infertap" "stage/$NAME/"
+            cp LICENSE NOTICE THIRD-PARTY-NOTICES "stage/$NAME/"
+            printf '%s\n' \
+              "InferTap ${ARTIFACT_VERSION} (${arch}-linux): the KV-cache telemetry tap." \
+              "" \
+              "Installation and configuration:" \
+              "https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/docs/install.md" \
+              "Runtime libraries and systemd requirements are listed in that guide." \
+              "" \
+              > "stage/$NAME/README"
+            if [ "$GITHUB_EVENT_NAME" = push ] && [[ "$GITHUB_REF" == refs/tags/* ]]; then
+              printf '%s\n' \
+                "Verify this artifact before installing:" \
+                "  cosign verify-blob --bundle SHA256SUMS.bundle \\" \
+                "    --certificate-oidc-issuer https://token.actions.githubusercontent.com \\" \
+                "    --certificate-identity https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@refs/tags/${GITHUB_REF_NAME} \\" \
+                "    SHA256SUMS" \
+                "  sha256sum -c --ignore-missing SHA256SUMS" \
+                >> "stage/$NAME/README"
+            else
+              printf '%s\n' \
+                "Unsigned validation artifact. Not a published release." \
+                "No signing bundle is produced by this manual workflow run." \
+                "Check integrity: sha256sum -c --ignore-missing SHA256SUMS" \
+                >> "stage/$NAME/README"
+            fi
+            cp packaging/systemd/infertap.service \
+               packaging/systemd/infertap-ship.service \
+               packaging/systemd/infertap-ship.timer \
+               packaging/systemd/ship.env.example \
+               packaging/systemd/kv-events.nft \
+               packaging/tap.toml.example \
+               "stage/$NAME/"
+            tar -C stage -czf "$NAME.tar.gz" "$NAME"
+          done
+          echo "NAME_X86=infertap-${ARTIFACT_VERSION}-x86_64-linux" >> "$GITHUB_ENV"
+          echo "NAME_ARM=infertap-${ARTIFACT_VERSION}-aarch64-linux" >> "$GITHUB_ENV"
+          sha256sum infertap-*.tar.gz *.cdx.json > SHA256SUMS
+          # Two tarballs and one SBOM: SHA256SUMS is the SIGNED manifest, so anything that slips
+          # into it would be signed as part of the release. Assert the count.
+          test "$(wc -l < SHA256SUMS)" -eq 3 || {
+            echo "::error::SHA256SUMS has $(wc -l < SHA256SUMS) lines, expected 3 (two tarballs + one SBOM)."
+            cat SHA256SUMS
+            exit 1
+          }
+
+      - name: smoke the packaged artifacts
+        # The tarball that ships is the tarball that was smoked, on each architecture: native
+        # for x86_64, under QEMU on a bullseye base for aarch64, which is the same glibc the
+        # floor step asserted, with no zmq package present, which re-proves the static link.
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/smoke && tar -C /tmp/smoke -xzf "$NAME_X86.tar.gz" && tar -C /tmp/smoke -xzf "$NAME_ARM.tar.gz"
+          "/tmp/smoke/$NAME_X86/infertap" show-payload > /dev/null
+          "/tmp/smoke/$NAME_X86/infertap" --version
+          docker run --rm --platform linux/arm64 -v /tmp/smoke:/smoke:ro debian:bullseye-slim \
+            "/smoke/$NAME_ARM/infertap" show-payload > /dev/null
+          docker run --rm --platform linux/arm64 -v /tmp/smoke:/smoke:ro debian:bullseye-slim \
+            "/smoke/$NAME_ARM/infertap" --version
+          echo "both packaged binaries run and pass their own trust check"
+
+      - name: smoke both release images before publication
+        run: |
+          set -euo pipefail
+          for arch in amd64 arm64; do
+            docker buildx build --platform "linux/$arch" --load \
+              -f packaging/docker/Dockerfile.release --build-context dist=dist \
+              -t "infertap-validation:$arch" .
+            docker run --rm --platform "linux/$arch" --read-only --cap-drop ALL \
+              --network none "infertap-validation:$arch" show-payload > /dev/null
+            sha256sum LICENSE NOTICE THIRD-PARTY-NOTICES |
+              docker run --rm -i --platform "linux/$arch" --read-only --cap-drop ALL \
+                --network none --entrypoint sh "infertap-validation:$arch" \
+                -c 'cd /usr/share/doc/infertap && sha256sum -c -'
+          done
+
+      - name: retain unsigned validation artifacts
+        if: github.event_name != 'push' || github.ref_type != 'tag'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-validation
+          path: |
+            infertap-*.tar.gz
+            infertap.cdx.json
+            SHA256SUMS
+          if-no-files-found: error
+
+      - name: install cosign
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: "v3.1.3"
+
+      - name: sign keyless, then verify by identity
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        # Sign release artifacts with this workflow's OIDC identity and log in Rekor.
+        run: |
+          set -euo pipefail
+          IDENTITY="https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@${GITHUB_REF}"
+          ISSUER="https://token.actions.githubusercontent.com"
+          echo "IDENTITY=$IDENTITY" >> "$GITHUB_ENV"
+          echo "ISSUER=$ISSUER" >> "$GITHUB_ENV"
+          # Named, never globbed: a glob here signs whatever happens to match, which is the
+          # wrong instinct in the one step whose output is a user's proof of origin.
+          for f in "$NAME_X86.tar.gz" "$NAME_ARM.tar.gz" SHA256SUMS; do
+            cosign sign-blob --bundle "$f.bundle" --yes "$f"
+            cosign verify-blob --bundle "$f.bundle" \
+              --certificate-identity "$IDENTITY" --certificate-oidc-issuer "$ISSUER" "$f"
+          done
+
+      - name: attest build provenance
+        # GitHub build provenance is enabled for public repositories.
+        # Cosign bundles provide artifact signatures independently.
+        if: github.event_name == 'push' && github.ref_type == 'tag' && !github.event.repository.private
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            ${{ env.NAME_X86 }}.tar.gz
+            ${{ env.NAME_ARM }}.tar.gz
+            SHA256SUMS
+
+      - name: publish the image, one manifest for both architectures, signed with the same identity
+        # GHCR is the channel: the same trust domain as this workflow's OIDC identity. The
+        # image is built from the SAME binaries the floor and the smoke proved, baked into
+        # the minimal non-root runtime stage by buildx as one multi-architecture manifest.
+        # Both architectures prove their own trust check before anything is signed; the
+        # manifest digest is what gets signed: a tag is a pointer, the digest is the bytes.
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        run: |
+          set -euo pipefail
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY}"
+          echo "${{ github.token }}" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -f packaging/docker/Dockerfile.release --build-context dist=dist \
+            -t "$IMAGE:$GITHUB_REF_NAME" --push .
+          for platform in linux/amd64 linux/arm64; do
+            docker run --rm --platform "$platform" "$IMAGE:$GITHUB_REF_NAME" show-payload > /dev/null
+          done
+          DIGEST="$(docker buildx imagetools inspect "$IMAGE:$GITHUB_REF_NAME" --format '{{json .Manifest.Digest}}' | tr -d '"')"
+          cosign sign --yes "$IMAGE@$DIGEST"
+          cosign verify --certificate-identity "$IDENTITY" \
+            --certificate-oidc-issuer "$ISSUER" "$IMAGE@$DIGEST"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          echo "IMAGE_DIGEST=$DIGEST" >> "$GITHUB_ENV"
+          echo "published and signed $IMAGE@$DIGEST (linux/amd64, linux/arm64)"
+
+      - name: attest the image
+        # Same gate and same reason as the artifact attestation above.
+        if: github.event_name == 'push' && github.ref_type == 'tag' && !github.event.repository.private
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ env.IMAGE_DIGEST }}
+          push-to-registry: true
+
+      - name: publish
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "$GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md \
+            "$NAME_X86.tar.gz" "$NAME_X86.tar.gz.bundle" \
+            "$NAME_ARM.tar.gz" "$NAME_ARM.tar.gz.bundle" \
+            SHA256SUMS SHA256SUMS.bundle \
+            infertap.cdx.json

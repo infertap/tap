@@ -1,0 +1,26 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sha256.jsonl#252",
+ "name": "removed_single",
+ "note": "one BlockRemoved: the smallest message the engine emits",
+ "source": "s0",
+ "wire_hex": "93cb41da99d2230c35cd9184a474797065ac426c6f636b52656d6f766564ac626c6f636b5f68617368657391cf43f972b77dc32602a66d656469756da3475055a967726f75705f6964780000",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1785153676190.7837,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 4898072202156647938,
+    "medium": "GPU"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

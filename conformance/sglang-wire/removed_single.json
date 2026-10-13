@@ -1,0 +1,74 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-hicache.jsonl#76",
+ "name": "removed_single",
+ "note": "a BlockRemoved carrying one hash: an eviction lands in the same step's batch as the store that needed the room",
+ "source": "s0",
+ "wire_hex": "93cb41daaef7a6bb78729687a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391d3e993bff20490a819b1706172656e745f626c6f636b5f68617368cf74a02940984c0252a9746f6b656e5f696473dc001010151414111712ccc62019ccdc120f101514aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505583a474797065ac426c6f636b52656d6f766564ac626c6f636b5f68617368657391cf085a7b894fad0f49a66d656469756daa4350555f50494e4e454487a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf10bab4832a3d91a3b1706172656e745f626c6f636b5f68617368cf17d7acd32b752359a9746f6b656e5f696473dc0010161716151612181614ccc62019ccdc161716aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505583a474797065ac426c6f636b52656d6f766564ac626c6f636b5f68617368657391d3e33dc432a529fef9a66d656469756daa4350555f50494e4e454487a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391d3e993bff20490a819b1706172656e745f626c6f636b5f68617368cf74a02940984c0252a9746f6b656e5f696473dc001010151414111712ccc62019ccdc120f101514aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756daa4350555f50494e4e454487a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf10bab4832a3d91a3b1706172656e745f626c6f636b5f68617368cf17d7acd32b752359a9746f6b656e5f696473dc0010161716151612181614ccc62019ccdc161716aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756daa4350555f50494e4e454400",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790697114929.2263,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 16831007278593255449,
+    "parent_hash": 8403762262083109458,
+    "block_size": 16,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790697114929.2263,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 601929329884860233,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697114929.2263,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 1205474325717422499,
+    "parent_hash": 1718031805832307545,
+    "block_size": 16,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790697114929.2263,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 16374459541987393273,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697114929.2263,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 16831007278593255449,
+    "parent_hash": 8403762262083109458,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697114929.2263,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 1205474325717422499,
+    "parent_hash": 1718031805832307545,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

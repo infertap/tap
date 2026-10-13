@@ -1,0 +1,43 @@
+{
+ "fixture_version": "v0",
+ "name": "zero_across_comparable_holders_is_measured",
+ "note": "two holders, every block carrying a portable identity, nothing shared: a real measured absence, the zero that IS a finding",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "c1"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i1",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "content_id": "c2"
+   }
+  ]
+ ],
+ "expect": {
+  "residual_zero": "measured"
+ }
+}

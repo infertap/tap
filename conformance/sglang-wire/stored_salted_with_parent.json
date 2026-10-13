@@ -1,0 +1,328 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-hicache.jsonl#164",
+ "name": "stored_salted_with_parent",
+ "note": "cache_salt on a run continuing a salted chain: not folded again; the parent carries the salt",
+ "source": "s0",
+ "wire_hex": "93cb41daaef7b39129c89188a474797065ab426c6f636b53746f726564ac626c6f636b5f686173686573dc001fd3eca5f1ab45065173d3918c40e58d2fc748cf1a42e11ec8504a24d3fd8938888bfacfbecf7cd81a52bbc6f2fccf42ec0b389586ec6ed3e1e19586b8df0cded3a513053a8d094c3fcf3e8eeab7457eae13cf4d75661f8325db51d3d5c08190888a0e66d3abd914b0b0cb4813cf536ce2352b28d72bd38869a6b5fd004dc5d3b713838b3bb662f4d3b3b65d5671f35558d3d6caaca8b4fafaadcf6219566a81266158d391990ce82902c415d3d51bb0f91ba0b38ad3b0158934778e6fbfd3d23b640be3363fb3cf5edbc810487aa089cf128bbd045a450b5bd3b2a952fe6f78b9a8d3b2dc10910cdb77c6cf2303ef0edebbf3c4cf4b3f23501e64bfb0cf6ce4a0645c23e918cf131d468901ea0114d38fa4371e36939a7cb1706172656e745f626c6f636b5f68617368cf67471d7fc6df5ecaa9746f6b656e5f696473dc01f0ce00017d85ce000148ffcd0119cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697cd2505cd0489cd2d2fcd0583cd6a51cdfc53cd0187cd4791cd0129cd5fc1ce000148ffce00017d85cd11d840cd3ac54ecd9e5acd0f33cd6c3fcd251ccd4ab0cd2deccd08cccd1220cd0697aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756daa4350555f50494e4e4544aa63616368655f73616c74ab74656e616e742d4343434300",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 17052301282007994739,
+    "parent_hash": 7441949343887613642,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 10487828986899449672,
+    "parent_hash": 17052301282007994739,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 1892322315775003172,
+    "parent_hash": 10487828986899449672,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 18269195522520305598,
+    "parent_hash": 1892322315775003172,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 8995969198312583932,
+    "parent_hash": 18269195522520305598,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 4822241638661680238,
+    "parent_hash": 8995969198312583932,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 16276454934153465054,
+    "parent_hash": 4822241638661680238,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 11894856789848050751,
+    "parent_hash": 16276454934153465054,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 4507798349910289939,
+    "parent_hash": 11894856789848050751,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 5581479598725913425,
+    "parent_hash": 4507798349910289939,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 15402453183373119078,
+    "parent_hash": 5581479598725913425,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 12382951399544801299,
+    "parent_hash": 15402453183373119078,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 6011428320618010411,
+    "parent_hash": 12382951399544801299,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 9829570962276765125,
+    "parent_hash": 6011428320618010411,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 13192032367523816180,
+    "parent_hash": 9829570962276765125,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 12949640404410783064,
+    "parent_hash": 13192032367523816180,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 15477372910002961069,
+    "parent_hash": 12949640404410783064,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 7068776105568002392,
+    "parent_hash": 15477372910002961069,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 10491430998196274197,
+    "parent_hash": 7068776105568002392,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 15356061938406699914,
+    "parent_hash": 10491430998196274197,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 12688198383623368639,
+    "parent_hash": 15356061938406699914,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 15148811773810196403,
+    "parent_hash": 12688198383623368639,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 6835276831725887625,
+    "parent_hash": 15148811773810196403,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 1336369540837477211,
+    "parent_hash": 6835276831725887625,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 12873912262560627112,
+    "parent_hash": 1336369540837477211,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 12888194448799528902,
+    "parent_hash": 12873912262560627112,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 2523123063403049924,
+    "parent_hash": 12888194448799528902,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 5422091303391641520,
+    "parent_hash": 2523123063403049924,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 7846572803689277720,
+    "parent_hash": 5422091303391641520,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 1377334615301816596,
+    "parent_hash": 7846572803689277720,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   },
+   {
+    "at_ms": 1790697166268.175,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 10350458446508431996,
+    "parent_hash": 1377334615301816596,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

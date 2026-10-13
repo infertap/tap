@@ -1,0 +1,223 @@
+{
+ "corpus": "delivery-records",
+ "schema_version": "v0",
+ "note": "The records that describe the DELIVERY layer rather than the cache. layout.json pins the directory and the naming convention; this pins the records, which were contractual and unpinned -- so a consumer modelled two record families, counted all three of these as unknown drift, and could not read a declared data loss. Every kind here must be a kind a consumer models.",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "incarnation_pattern": "<run_start_unix_ms>-<pid>",
+ "cases": [
+  {
+   "note": "opens every segment; carries the identity the filename merely echoes",
+   "expect": {
+    "kind": "segment_open",
+    "at_ms": 1785153670000.0,
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "contract_version": "2.1",
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300,
+    "key_epoch": 3,
+    "workload_class": "agentic",
+    "incarnation": "1785153670000-4242",
+    "segment_seq": 0
+   }
+  },
+  {
+   "note": "an attributable orphan: header survived, tail torn and discarded",
+   "expect": {
+    "kind": "segment_recovered",
+    "at_ms": 1785153671000.0,
+    "attributed": true,
+    "dropped_bytes": 137
+   }
+  },
+  {
+   "note": "an unattributable file: the header did not survive, so the whole file (4096 bytes here) is discarded and declared by the recovering incarnation in its own first segment; the span it covered was already uncovered",
+   "expect": {
+    "kind": "segment_recovered",
+    "at_ms": 1785153672000.0,
+    "attributed": false,
+    "dropped_bytes": 4096
+   }
+  },
+  {
+   "note": "declared loss -- segments 4 through 6 dropped under the disk cap. The magnitudes are illustrative; the shapes are the contract.",
+   "expect": {
+    "kind": "segments_dropped",
+    "at_ms": 1785153673000.0,
+    "incarnation": "1785153670000-4242",
+    "count": 3,
+    "first": "seg-1785153670000-4242-4.jsonl",
+    "last": "seg-1785153670000-4242-6.jsonl",
+    "first_seq": 4,
+    "last_seq": 6
+   }
+  },
+  {
+   "note": "the same pass reclaiming a PREVIOUS run's segments: a second record, under that run's incarnation rather than the dropping process's. One record per incarnation is what keeps a range describable.",
+   "expect": {
+    "kind": "segments_dropped",
+    "at_ms": 1785153673000.0,
+    "incarnation": "1785153600000-1817",
+    "count": 4,
+    "first": "seg-1785153600000-1817-11.jsonl",
+    "last": "seg-1785153600000-1817-14.jsonl",
+    "first_seq": 11,
+    "last_seq": 14
+   }
+  }
+ ],
+ "segment": {
+  "note": "one sealed segment as shipped. The header is first and every later record belongs to its incarnation; that containment is the contract, not a convention of this fixture. parquet_twin names the same records in the shipped Parquet form (spec 2.1), generated from this object by tools/gen-parquet-twin.py. The records after the first five exist to make reader defects REACHABLE: a clear (a cache fact with no block id), a holder_reset (not a cache fact at all), an evict with a resolved content_id beside one without, and a second instance carrying dp_rank and group_idx. A corpus that omits a kind cannot fail a reader that mishandles it.",
+  "filename": "seg-1785153670000-4242-0.jsonl",
+  "parquet_twin": "seg-1785153670000-4242-0.parquet",
+  "incarnation": "1785153670000-4242",
+  "lines": [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153670000.0,
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "contract_version": "2.1",
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300,
+    "key_epoch": 3,
+    "workload_class": "agentic",
+    "incarnation": "1785153670000-4242",
+    "segment_seq": 0
+   },
+   {
+    "kind": "store",
+    "at_ms": 1785153670010.0,
+    "instance_id": "i0",
+    "block_id": "8f2b1c04a7d93e15",
+    "n_tokens": 16,
+    "tier": "gpu"
+   },
+   {
+    "kind": "store",
+    "at_ms": 1785153670020.0,
+    "instance_id": "i0",
+    "block_id": "b3e77a190c4f2d68",
+    "n_tokens": 16,
+    "tier": "gpu"
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153670025.0,
+    "msgs_seen": 3,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 3,
+    "content_unresolved": 0,
+    "content_bridge_entries": 2,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://127.0.0.1:5557",
+      "msgs_seen": 3,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153670020.0,
+      "publisher_restarts": 0,
+      "topic": "kv@pod-a@model-x"
+     },
+     {
+      "source": "i0",
+      "endpoint": "tcp://127.0.0.1:5558",
+      "msgs_seen": 0,
+      "dropped": 0
+     }
+    ]
+   },
+   {
+    "kind": "evict",
+    "at_ms": 1785153670030.0,
+    "instance_id": "i0",
+    "block_id": "8f2b1c04a7d93e15"
+   },
+   {
+    "kind": "store",
+    "at_ms": 1785153670040.0,
+    "instance_id": "i1",
+    "block_id": "c41d9f8a2b6e0357",
+    "n_tokens": 16,
+    "tier": "gpu",
+    "dp_rank": 1,
+    "group_idx": 2,
+    "content_id": "11111111111111111111",
+    "parent_id": "8f2b1c04a7d93e15",
+    "spec_kind": "full_attention"
+   },
+   {
+    "kind": "evict",
+    "at_ms": 1785153670050.0,
+    "instance_id": "i1",
+    "block_id": "c41d9f8a2b6e0357",
+    "tier": "gpu",
+    "dp_rank": 1,
+    "group_idx": 2,
+    "content_id": "11111111111111111111"
+   },
+   {
+    "kind": "clear",
+    "at_ms": 1785153670060.0,
+    "instance_id": "i1",
+    "dp_rank": 1,
+    "group_idx": 2,
+    "scope": "all",
+    "tier": "gpu"
+   },
+   {
+    "kind": "holder_reset",
+    "at_ms": 1785153670070.0,
+    "instance_id": "i1",
+    "dp_rank": 1,
+    "group_idx": 2,
+    "boundary_ms": 1785153670065.0
+   }
+  ]
+ },
+ "recovering_segment": {
+  "note": "the first segment of an incarnation that found and discarded a headerless file: segment_open first, the unattributed segment_recovered second, then the run's own records. The discarded span was already uncovered; the declaration changes no coverage figure.",
+  "filename": "seg-1785153900000-200-0.jsonl",
+  "incarnation": "1785153900000-200",
+  "lines": [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153900000.0,
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "contract_version": "2.1",
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300,
+    "key_epoch": 3,
+    "workload_class": "agentic",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0
+   },
+   {
+    "kind": "segment_recovered",
+    "at_ms": 1785153900001.0,
+    "attributed": false,
+    "dropped_bytes": 4096
+   },
+   {
+    "kind": "store",
+    "at_ms": 1785153900010.0,
+    "instance_id": "i0",
+    "block_id": "8f2b1c04a7d93e15",
+    "n_tokens": 16,
+    "tier": "gpu"
+   }
+  ]
+ }
+}

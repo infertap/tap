@@ -1,0 +1,39 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "run_with_skipped_blocks",
+ "note": "CONSTRUCTED: a hash list shorter than its token span. Parenthood is undeterminable for the whole run, so every block says UNKNOWN rather than claiming a root or inventing a chain",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd1918ba474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657392cf9673ded4694eb765cfb3caaab40f72f259b1706172656e745f626c6f636b5f68617368cf37281ee67f6d0bbca9746f6b656e5f696473dc0030000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2faa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da3475055a96c6f72615f6e616d65c0aa65787472615f6b657973c0a967726f75705f69647800b26b765f63616368655f737065635f6b696e64ae66756c6c5f617474656e74696f6e00",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1785153670149.1587,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 10841253731892115301,
+    "parent_unknown": true,
+    "block_size": 16,
+    "medium": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "at_ms": 1785153670149.1587,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 12955354968414679641,
+    "parent_unknown": true,
+    "block_size": 16,
+    "medium": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

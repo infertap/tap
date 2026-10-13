@@ -1,0 +1,19 @@
+# What keeps the engine's KV-events stream on the host, for the systemd install.
+#
+# The publisher binds every interface and carries tokenized prompt content without
+# authentication. The tap connects over loopback. Admit that and
+# nothing else: 5557 and 5657 are the publisher's ports in every example here; under data
+# parallelism rank N publishes on base + N, so widen the sets to the ranks the host runs.
+#
+#   nft -f /etc/nftables.d/kv-events.nft        # now
+#   include "/etc/nftables.d/kv-events.nft"     # in /etc/nftables.conf, to persist
+#
+# A host that filters elsewhere (firewalld, a cloud security group) needs the same rule
+# there; this file is the rule, not the only place it can live.
+table inet infertap {
+  chain kv_events {
+    type filter hook input priority filter; policy accept;
+    iifname "lo" tcp dport { 5557, 5657 } accept
+    tcp dport { 5557, 5657 } drop
+  }
+}

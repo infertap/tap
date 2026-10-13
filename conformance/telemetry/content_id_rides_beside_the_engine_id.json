@@ -1,0 +1,80 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "content_id_rides_beside_the_engine_id",
+ "note": "TWO IDENTITY SPACES on one record. block_id is the engine's, comparable only inside the process that computed it, because vLLM seeds every chain from a per-process random root unless PYTHONHASHSEED is fixed. content_id is derived from what the block contains and is comparable across the fleet. Both are carried; a consumer must never join across them, and content_id is ABSENT where the tap could not honestly derive one",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "content_id": 11111111111111111111
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670010.0,
+   "block_hash": 10841253731892115301,
+   "medium": "GPU",
+   "content_id": 11111111111111111111
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670020.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "evict": 1,
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention",
+    "content_id": "11111111111111111111"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "kind": "evict",
+    "block_id": "10841253731892115301",
+    "tier": "GPU",
+    "content_id": "11111111111111111111"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670020.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

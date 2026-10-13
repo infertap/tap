@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "batch_is_a_map",
+ "note": "a map where the batch array belongs",
+ "source": "s0",
+ "wire_hex": "81a27473cb3ff0000000000000",
+ "expect": {
+  "error": {
+   "stage": "normalize",
+   "contains": "batch is not an array"
+  }
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "derivation": "Valid fixtures are real captured bytes; their expected events are derived independently by tools/gen-vllm-wire-corpus.py from the normative semantics, never by running the implementation under test. Malformed fixtures are deliberate mutations of real payloads.",
+ "captures": [
+  "capture/capture-sha256.jsonl",
+  "capture/capture-salt.jsonl"
+ ],
+ "valid": [
+  "cleared_all",
+  "cleared_scope_undeclared",
+  "hash_above_i64_max",
+  "locality_local",
+  "locality_on_remove",
+  "locality_remote",
+  "many_events_batch",
+  "multi_event_batch",
+  "removed_single",
+  "run_with_skipped_blocks",
+  "stored_fanout",
+  "stored_root",
+  "stored_salted",
+  "stored_single",
+  "stored_with_parent",
+  "unknown_alongside_known",
+  "unknown_event_type"
+ ],
+ "malformed": [
+  "batch_is_a_map",
+  "block_hashes_missing",
+  "block_size_missing",
+  "event_is_tag_array",
+  "event_no_type",
+  "events_not_array",
+  "garbage_bytes",
+  "hash_is_negative",
+  "hash_is_string",
+  "top_level_string",
+  "trailing_garbage",
+  "truncated_payload",
+  "ts_missing"
+ ]
+}

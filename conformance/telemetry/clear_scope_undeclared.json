@@ -1,0 +1,75 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "clear_scope_undeclared",
+ "note": "a clear whose wire shape declared NO scope: the record omits dp_rank and group_idx, because the producer holds no scope claim there and a defaulted zero would be one. The clear's shape is assumed (never observed live), and absence fails toward declared: the producer releases globally for the named tier, and the reader must close every holder of this instance and tier -- never just holder zero",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "dp_rank": 0
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670010.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "dp_rank": 1
+  },
+  {
+   "source": "a",
+   "type": "Cleared",
+   "at_ms": 1785153670020.0,
+   "medium": "GPU"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "clear": 1,
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 1,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "at_ms": 1785153670020.0,
+    "kind": "clear",
+    "scope": "all",
+    "tier": "GPU"
+   }
+  ]
+ }
+}

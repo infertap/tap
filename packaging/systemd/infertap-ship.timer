@@ -1,0 +1,23 @@
+# Ship sealed segments every two minutes.
+#
+# The interval is a latency choice, not a correctness one: segments seal on their own schedule
+# (--segment-secs, default 300), and shipping more often than they seal simply finds nothing to
+# do. Two minutes keeps arrival lag below the seal interval so that "no new segment past the
+# cadence" stays a usable staleness signal downstream.
+#
+# Persistent=true so a node that was down catches up on boot rather than skipping the runs it
+# missed. AccuracySec is loose because nothing here is time-critical and tight timers wake
+# every node in a fleet simultaneously.
+
+[Unit]
+Description=infertap segment shipper timer
+Requires=infertap-ship.service
+
+[Timer]
+OnBootSec=60
+OnUnitActiveSec=120
+AccuracySec=30
+Persistent=true
+
+[Install]
+WantedBy=timers.target

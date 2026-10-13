@@ -1,0 +1,45 @@
+{
+ "fixture_version": "v0",
+ "name": "a_1_1_segment_reads_from_its_header_like_any_other",
+ "note": "a segment written under 1.1, which stamped provenance onto every record. The header is a record like any other, so it carried provenance too -- in every segment ever written. A reader that takes provenance from the header alone is therefore correct here with no second code path, and simply ignores the copies 1.1 repeats. That is what lets 2.2 be a MUST rather than a choice between two forms: retention means a reader meets segments written by the previous producer for as long as it keeps them (spec 2.2, 6.2)",
+ "segments": [
+  [
+   {
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.1",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0
+   },
+   {
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153671000.0
+   }
+  ]
+ ],
+ "expect": {
+  "attribution": [
+   {
+    "segment": 0,
+    "provenance": {
+     "gpu": "fixture",
+     "vllm_version": "0.26.0",
+     "event_schema_version": "vllm-0.26.0-map"
+    },
+    "workload_class": null
+   }
+  ]
+ }
+}

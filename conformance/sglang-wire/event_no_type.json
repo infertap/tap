@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "event_no_type",
+ "note": "an event map with no type discriminator",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6e11cefbb9182ac626c6f636b5f6861736865739101a66d656469756da347505500",
+ "expect": {
+  "error": {
+   "stage": "normalize",
+   "contains": "type"
+  }
+ }
+}

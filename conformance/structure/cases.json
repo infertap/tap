@@ -1,0 +1,151 @@
+[
+  {
+    "name": "store with wide string identity",
+    "valid": true,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16,
+      "tier": "GPU"
+    }
+  },
+  {
+    "name": "null tier remains an unknown tier",
+    "valid": true,
+    "record": {
+      "kind": "evict",
+      "at_ms": 1,
+      "instance_id": "i0",
+      "block_id": "7",
+      "tier": null
+    }
+  },
+  {
+    "name": "negative token count",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": -1,
+      "tier": "GPU"
+    }
+  },
+  {
+    "name": "integer outside column range",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 9223372036854775808,
+      "tier": "GPU"
+    }
+  },
+  {
+    "name": "numeric identity",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": 7,
+      "n_tokens": 16,
+      "tier": "GPU"
+    }
+  },
+  {
+    "name": "null optional identity",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16,
+      "tier": "GPU",
+      "content_id": null
+    }
+  },
+  {
+    "name": "rank outside u32",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16,
+      "tier": "GPU",
+      "dp_rank": 4294967296
+    }
+  },
+  {
+    "name": "nonstring partition",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16,
+      "tier": "GPU",
+      "extra_keys": [
+        false
+      ]
+    }
+  },
+  {
+    "name": "missing required identity",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "n_tokens": 16,
+      "tier": "GPU"
+    }
+  },
+  {
+    "name": "unknown parent cannot name a parent",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16,
+      "tier": "GPU",
+      "parent_unknown": true,
+      "parent_id": "7"
+    }
+  },
+  {
+    "name": "whole JSON number is an integer",
+    "valid": true,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16.0,
+      "tier": "GPU"
+    }
+  },
+  {
+    "name": "fractional counter is invalid",
+    "valid": false,
+    "record": {
+      "kind": "store",
+      "at_ms": 1.25,
+      "instance_id": "i0",
+      "block_id": "340282366920938463463374607431768211455",
+      "n_tokens": 16.5,
+      "tier": "GPU"
+    }
+  }
+]

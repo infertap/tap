@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "event_no_type",
+ "note": "an event map with no type discriminator",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd19182ac626c6f636b5f6861736865739101a66d656469756da347505500",
+ "expect": {
+  "error": {
+   "stage": "normalize",
+   "contains": "type"
+  }
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "fixture_version": "v0",
+ "name": "each_segment_carries_its_own_declaration",
+ "note": "two runs of one producer declare different workload classes. The declaration is scoped to the segment that carries it, so a reconfiguration between runs does not reach back -- which is the whole reason this rides the header rather than being joined in from a reader's own configuration, where it would apply today's answer to yesterday's records (spec 2.7)",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.2",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "workload_class": "agentic",
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153671000.0
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.2",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "gpu": "fixture-b",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "workload_class": "batch",
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153671000.0
+   }
+  ]
+ ],
+ "expect": {
+  "attribution": [
+   {
+    "segment": 0,
+    "provenance": {
+     "gpu": "fixture",
+     "vllm_version": "0.26.0",
+     "event_schema_version": "vllm-0.26.0-map",
+     "heartbeat_secs": 60,
+     "max_segment_secs": 300
+    },
+    "workload_class": "agentic"
+   },
+   {
+    "segment": 1,
+    "provenance": {
+     "gpu": "fixture-b",
+     "vllm_version": "0.26.0",
+     "event_schema_version": "vllm-0.26.0-map",
+     "heartbeat_secs": 60,
+     "max_segment_secs": 300
+    },
+    "workload_class": "batch"
+   }
+  ]
+ }
+}

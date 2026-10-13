@@ -1,0 +1,38 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "unknown_alongside_known",
+ "note": "an unmodelled kind next to a modelled one: the known event still flows",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6e11cefbb9282a474797065af536f6d654675747572654576656e74a877686174657665729301020387a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657392cf3d8931dd183f224bcf4fc4bcb6b545fff7b1706172656e745f626c6f636b5f68617368c0a9746f6b656e5f696473dc0020cdcc69cd0f2fcd0339cd0562cd0916cd0be0cd108ccd1287cd1f9ecd1f7fcd2d6bcd1693cdacb6cd7233cdecf3cdf334cd8f2fcde2b7ce00013df5cdf252ce00016e8bcd42b1cd42b1cd025bcd42b1cd4d4dcd42b1cd6cd0cd42b1cd84e8cd42b1cdcdbeaa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505500",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790696324452.132,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 4434130133787288139,
+    "block_size": 16,
+    "medium": "GPU",
+    "content_id": "141695192822937788550151987633851105565"
+   },
+   {
+    "at_ms": 1790696324452.132,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 5747926517342928887,
+    "parent_hash": 4434130133787288139,
+    "block_size": 16,
+    "medium": "GPU",
+    "content_id": "177175650789865621221995557724499973575"
+   }
+  ],
+  "unknown_types": 1
+ }
+}

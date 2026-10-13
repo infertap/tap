@@ -1,0 +1,61 @@
+{
+ "fixture_version": "v0",
+ "name": "audit_restart_mid_flight_is_indeterminate",
+ "note": "store written by one producer run, evict by the next: the fresh run legitimately resolves nothing it did not see stored, so the absent content_id is expected -- indeterminate, never a lost promise. An unattributed segment (no run identity) grades the same way: unknown provenance cannot support a same-run claim",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "c1"
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0
+   }
+  ]
+ ],
+ "expect": {
+  "audit": {
+   "i0": {
+    "audited": 1,
+    "agreed": 0,
+    "mismatched": 0,
+    "underresolved": 0,
+    "indeterminate": 1,
+    "unjoined": 0
+   }
+  }
+ }
+}

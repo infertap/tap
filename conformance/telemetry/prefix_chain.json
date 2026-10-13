@@ -1,0 +1,61 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "prefix_chain",
+ "note": "a root store and its chained child: parent_id is ABSENT at the root and present on the child, so the prefix edge reaches the aggregator intact",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670100.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "parent_hash": 10841253731892115301
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "parent_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

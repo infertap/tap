@@ -1,0 +1,114 @@
+{
+ "corpus": "pseudonym",
+ "schema_version": "v0",
+ "construction": "HMAC-SHA256(key, context||0x00||epoch:u32-be||0x00||raw_id)[:16] hex; engine IDs use 8-byte big endian, content IDs use 16-byte big endian",
+ "producer": {
+  "python": "3.9.6",
+  "hashlib": "stdlib",
+  "hmac": "stdlib"
+ },
+ "test_key_hex": "696e6665727461702d636f6e666f726d616e63652d746573742d6b6579212121696e6665727461702d636f6e666f726d616e63652d6e6f6e6365212121212121",
+ "test_key_note": "TEST-ONLY 64-byte key file (ASCII): 32-byte HMAC key 'infertap-conformance-test-key!!!' followed by 32-byte canary nonce 'infertap-conformance-nonce!!!!!!'. Never a deployment key. Deployments supply 64 random bytes from external config. The key half is unchanged from the 32-byte era, so every pseudonym below survived the format change unrecomputed.",
+ "vectors": [
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 0,
+   "pseudonym": "d6f91aabe026a79f9c6a4394cde6a436"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 1,
+   "pseudonym": "db83955d1a485fe98364fd9e47c8bc08"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 2,
+   "pseudonym": "0246c23688d8fae0ef34bc1dc4a73ed8"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 7,
+   "pseudonym": "a11dadf39bcf1cfbe1169b3201b0c56c",
+   "note": "chained row: child of raw_id 1. A store record {block_id: 7, parent_id: 1} maps both under the same (key, context, epoch), so the emitted parent_id equals raw_id 1's pseudonym above: the prefix edge survives pseudonymization."
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 18446744073709551615,
+   "pseudonym": "18a6384a6a3b35492883f782c5bb3db6",
+   "note": "Relabelled from i64 -1: same big-endian bytes, same pseudonym."
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 2147483648,
+   "pseudonym": "c8cd67a1b65b278ba6b0ad3a29e40999"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 9223372036854775807,
+   "pseudonym": "c01d7938f8dad46d182b38573684f59a"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 0,
+   "raw_id": 9223372036854775808,
+   "pseudonym": "795c86b164e9afa1a9579c84e51651d7",
+   "note": "Relabelled from i64 -9223372036854775808: same big-endian bytes, same pseudonym."
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 1,
+   "raw_id": 1,
+   "pseudonym": "dba8651a0e289d52bbb7f0650c50274e"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 7,
+   "raw_id": 1,
+   "pseudonym": "b54b50bc760efb4e5f8144238407006c"
+  },
+  {
+   "context": "infertap:block-id:v1",
+   "epoch": 4294967295,
+   "raw_id": 1,
+   "pseudonym": "a1a9d03a676794f6d20dcd9db62bb4fb"
+  },
+  {
+   "context": "infertap:other-purpose:v1",
+   "epoch": 0,
+   "raw_id": 1,
+   "pseudonym": "dbc635562f4e92525674103f5e887b86"
+  },
+  {
+   "context": "infertap:content-id:v2",
+   "epoch": 0,
+   "raw_id": "0",
+   "pseudonym": "92d732ab07e3a7b05cdb4f3fb1c85cc6"
+  },
+  {
+   "context": "infertap:content-id:v2",
+   "epoch": 0,
+   "raw_id": "1",
+   "pseudonym": "1244f19469ac05998ee3367120e368ec"
+  },
+  {
+   "context": "infertap:content-id:v2",
+   "epoch": 0,
+   "raw_id": "12955354968414679641",
+   "pseudonym": "cf07934300dc314fbc0e567d3e893553"
+  },
+  {
+   "context": "infertap:content-id:v2",
+   "epoch": 7,
+   "raw_id": "1",
+   "pseudonym": "06175a22d2e344845397630d87e47f1e"
+  }
+ ],
+ "construction_note": "Engine and content identities use separate contexts and fixed input widths. Content construction v2 retains 128 bits."
+}

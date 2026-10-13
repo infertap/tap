@@ -1,0 +1,63 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "same_content_distinct_engine_ids",
+ "note": "THE POINT OF CONTENT IDENTITY. Two instances hold the same prefix, and their ENGINE ids differ -- which is the normal case, not a corner: vLLM seeds every prefix chain from os.urandom(32) unless PYTHONHASHSEED is fixed, so two processes serving identical prompts produce disjoint id spaces. Keyed on block_id this is two unrelated blocks and the duplication reads as zero; keyed on content_id it is one prefix held twice. The agent states both ids and joins nothing",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "content_id": 9999999999999999999
+  },
+  {
+   "source": "b",
+   "type": "Stored",
+   "at_ms": 1785153670010.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "content_id": 9999999999999999999
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention",
+    "content_id": "9999999999999999999"
+   },
+   {
+    "instance_id": "b",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention",
+    "content_id": "9999999999999999999"
+   }
+  ]
+ }
+}

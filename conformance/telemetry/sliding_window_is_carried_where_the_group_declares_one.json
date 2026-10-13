@@ -1,0 +1,63 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "sliding_window_is_carried_where_the_group_declares_one",
+ "note": "the group's sliding-window size, named beside its spec_kind. It is the geometry that decides which blocks an engine skips, so a consumer reasoning about a non-contiguous run needs it; absent where the engine declared nothing, like spec_kind and unlike tier",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "sliding_window",
+   "spec_sliding_window": 4096
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670100.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "parent_hash": 10841253731892115301
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "sliding_window",
+    "spec_sliding_window": 4096
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "parent_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

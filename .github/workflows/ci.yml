@@ -1,0 +1,142 @@
+# CI: the checks every local landing already passed, enforced on every push, plus the
+# supply-chain jobs (advisory audit, SBOM artifact) that belong centralized. Actions are
+# pinned by commit SHA, because a tag is mutable and a SHA is not. The toolchain comes from
+# rust-toolchain.toml (version-pinned), so CI and local builds are identical. The weekly
+# schedule re-runs the audit because advisories appear without code changes.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # No libzmq package: zmq-sys compiles its vendored libzmq from source in every build,
+      # so the zmq feature needs only the C++ toolchain the runner already has.
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+      - name: THIRD-PARTY-NOTICES covers the tree that actually ships
+        run: python3 scripts/third-party-notices.py --check
+      - name: every source file carries the SPDX licence header
+        run: scripts/spdx-check.sh
+      - name: nothing that ships cites what the public cut leaves behind
+        run: scripts/citation-check.sh
+      - name: the capture the property tests read, fetched and digest-verified
+        run: scripts/fetch-capture.sh
+      - name: code checks (both feature sets)
+        run: scripts/check-code.sh
+
+  # Build the locked dependency tree on the declared minimum Rust version.
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+        with:
+          toolchain: "1.85.0"
+          # rust-toolchain.toml pins 1.97 for everything else; this job wants the floor.
+          override: true
+      - name: the locked tree builds on the declared minimum
+        run: cargo +1.85.0 check --all-features --locked
+
+  # The Developer Certificate of Origin: every non-merge commit a push or pull request
+  # brings carries a Signed-off-by line (CONTRIBUTING.md). A push to main checks the pushed
+  # range; a pull request checks base..head. Not on the weekly schedule, which brings no
+  # commits. The check is a shell script, judged by exit code, so it runs the same way
+  # locally: scripts/dco-check.sh main HEAD.
+  dco:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: every commit is signed off (DCO 1.1)
+        run: scripts/dco-check.sh "${{ github.event.pull_request.base.sha || github.event.before }}" "${{ github.event.pull_request.head.sha || github.sha }}"
+
+  # The cross-repo half of the corpus pin. The offline half runs in `cargo test`
+  # (tests/contract_hash.rs) against the vendored bytes; this job re-resolves the pinned
+  # tag in the public spec repo and diffs the vendored tree against the clone, so a moved
+  # tag or upstream drift is caught on the weekly schedule as well as on every push.
+  spec-pin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: vendored corpus matches the pinned upstream
+        run: |
+          . ./SPEC_PIN
+          git clone --quiet --depth 1 --branch "$tag" "$repo" /tmp/spec
+          test "$(git -C /tmp/spec rev-parse HEAD)" = "$commit"
+          (cd /tmp/spec && python3 tools/contract-hash.py --check)
+          test "$(cat /tmp/spec/conformance/CONTRACT_HASH)" = "$corpus_sha256"
+          diff -r conformance /tmp/spec/conformance
+          diff -r vendor/inference-events /tmp/spec/crates/model
+
+  # End to end with no GPU: the stub publisher replays captured bytes over a real ZMQ PUB
+  # socket, the tap subscribes through its live transport, and sealed Parquet plus a clean
+  # tally are asserted through the live socket transport.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+      - run: python3 -m pip install --quiet pyzmq
+      - run: cargo build --features zmq --locked
+      - name: stub publisher -> live transport -> sealed parquet
+        run: scripts/e2e-stub.sh target/debug/infertap
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+      # Pinned to the version the release gate installs (release.yml), so the two
+      # verdicts come from one tool.
+      - run: cargo install cargo-audit@0.22.2 --locked
+      - run: cargo audit
+
+  deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+      - run: cargo install cargo-deny@0.20.2 --locked
+      - run: cargo deny check
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: docker build -f packaging/docker/Dockerfile -t infertap:ci .
+      - name: trust check inside the image
+        run: docker run --rm infertap:ci show-payload
+      - name: image includes the project licence and dependency notices
+        run: |
+          sha256sum LICENSE NOTICE THIRD-PARTY-NOTICES |
+            docker run --rm -i --network none --read-only --cap-drop ALL \
+              --entrypoint sh infertap:ci \
+              -c 'cd /usr/share/doc/infertap && sha256sum -c -'
+
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+      - run: cargo install cargo-cyclonedx@0.5.9 --locked
+      - run: cargo cyclonedx --format json --features zmq
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sbom-cyclonedx
+          path: "*.cdx.json"

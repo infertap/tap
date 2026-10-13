@@ -1,0 +1,82 @@
+{
+ "fixture_version": "v0",
+ "name": "refused_degrades_exactly_the_named_holder_over_its_window",
+ "note": "a declared capacity loss for i0's worker 0 over [T+10s, T+20s]: figures over that holder in that window are lower bounds (spec 2.4) -- and nothing else moves. The sibling worker on the same instance stands inside the window, and the named holder stands outside it: the signal is scoped precisely so the rest of the fleet's figures can",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "identity_refused",
+    "at_ms": 1785154170000.0,
+    "instance_id": "i0",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "refused": 5,
+    "window_start_ms": 1785153680000.0,
+    "window_end_ms": 1785153690000.0
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153682000.0
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 1,
+    "group_idx": 0,
+    "at_ms": 1785153685000.0
+   }
+  ]
+ ],
+ "expect": {
+  "holder_register": [
+   {
+    "instance": "i0",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "span_ms": [
+     1785153680000.0,
+     1785153690000.0
+    ],
+    "register": "lower_bound"
+   },
+   {
+    "instance": "i0",
+    "dp_rank": 1,
+    "group_idx": 0,
+    "span_ms": [
+     1785153680000.0,
+     1785153690000.0
+    ],
+    "register": "none"
+   },
+   {
+    "instance": "i0",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "span_ms": [
+     1785153700000.0,
+     1785153710000.0
+    ],
+    "register": "none"
+   }
+  ]
+ }
+}

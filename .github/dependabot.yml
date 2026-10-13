@@ -1,0 +1,19 @@
+# Dependency and action updates arrive as pull requests, weekly, so the pins move on
+# purpose. Cargo updates must clear the static audit's allowlist and cargo-deny like any
+# other change; action updates must keep their commit-SHA pins, which Dependabot preserves.
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      cargo-minor:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

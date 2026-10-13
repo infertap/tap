@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "garbage_bytes",
+ "note": "0xc1 is never-used in msgpack: undecodable by construction",
+ "source": "s0",
+ "wire_hex": "c1c1c1c1c1c1c1c1",
+ "expect": {
+  "error": {
+   "stage": "decode",
+   "contains": ""
+  }
+ }
+}

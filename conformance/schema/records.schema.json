@@ -1,0 +1,1142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infertap.ai/schemas/inference-events/records.schema.json",
+  "title": "Inference event records",
+  "description": "Structural wire contract. Stream obligations are defined in spec/kv-cache-v2.md. Unknown fields are preserved for forward compatibility.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/agent_start"
+    },
+    {
+      "$ref": "#/$defs/agent_stop"
+    },
+    {
+      "$ref": "#/$defs/clear"
+    },
+    {
+      "$ref": "#/$defs/evict"
+    },
+    {
+      "$ref": "#/$defs/heartbeat"
+    },
+    {
+      "$ref": "#/$defs/holder_reset"
+    },
+    {
+      "$ref": "#/$defs/identity_refused"
+    },
+    {
+      "$ref": "#/$defs/segment_open"
+    },
+    {
+      "$ref": "#/$defs/segment_recovered"
+    },
+    {
+      "$ref": "#/$defs/segments_dropped"
+    },
+    {
+      "$ref": "#/$defs/store"
+    }
+  ],
+  "$defs": {
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "dropped": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages known lost on this subscription."
+        },
+        "endpoint": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Configured subscription endpoint."
+        },
+        "last_msg_at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "optional",
+          "description": "Producer-clock timestamp of the last observed message, in milliseconds."
+        },
+        "msgs_seen": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages observed on this subscription."
+        },
+        "publisher_restarts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Sequence regressions observed on this subscription."
+        },
+        "source": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Operator-defined source name for this subscription."
+        },
+        "topic": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Configured subscription topic."
+        }
+      },
+      "required": [
+        "dropped",
+        "endpoint",
+        "msgs_seen",
+        "source"
+      ],
+      "additionalProperties": true
+    },
+    "agent_start": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "agent_start",
+          "description": "Record discriminator: `agent_start`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "agent_version": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Producer version."
+        },
+        "egress": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "One of `pseudonymized` or `raw`. `raw` means identities are emitted unprotected and \u00a73's key-space rules do not apply."
+        },
+        "endpoint_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Subscriptions configured."
+        },
+        "max_payload_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Largest inbound engine message accepted."
+        },
+        "canary": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "conditional",
+          "description": "Present when identities are keyed (\u00a73.4)."
+        },
+        "reuse_reporting": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "`none` \\| `labelled` \\| `unlabelled`; whether this producer's engine announces cache reuse as a `store`, and whether it can be told apart (\u00a72.3)."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "agent_version",
+        "egress",
+        "endpoint_count",
+        "max_payload_bytes"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.4",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "egress": {
+                "const": "pseudonymized"
+              }
+            },
+            "required": [
+              "egress"
+            ]
+          },
+          "then": {
+            "required": [
+              "canary"
+            ]
+          }
+        }
+      ]
+    },
+    "agent_stop": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "agent_stop",
+          "description": "Record discriminator: `agent_stop`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "reason": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Why the run ended."
+        },
+        "msgs_seen": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages observed on this subscription."
+        },
+        "dropped": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages known lost on this subscription."
+        },
+        "oversized": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages refused for size."
+        },
+        "unknown_types": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages of unmodelled type."
+        },
+        "events_ingested": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Events that reached the record model."
+        },
+        "content_unresolved": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Records emitted with no `content_id`, one per omission (\u00a73.1)."
+        },
+        "content_bridge_entries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Identity-derivation state size (the producer's view of the resident set)."
+        },
+        "content_bridge_evicted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Identity promises refused at the declared capacity; nonzero means some evicts will not resolve, each window also declared via `identity_refused`."
+        },
+        "publisher_restarts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Sequence regressions observed on this subscription; the envelope's `publisher_restarts` is their sum, and `holder_reset` (\u00a72.3) is the record a reader acts on."
+        },
+        "reuse_reporting": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "`none` \\| `labelled` \\| `unlabelled`; whether this producer's engine announces cache reuse as a `store`, and whether it can be told apart (\u00a72.3)."
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Endpoint"
+          },
+          "x-column-type": "list<struct>",
+          "x-presence": "required",
+          "description": "Per-subscription statistics."
+        },
+        "canary": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "conditional",
+          "description": "Present when identities are keyed (\u00a73.4)."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "reason",
+        "msgs_seen",
+        "dropped",
+        "oversized",
+        "unknown_types",
+        "events_ingested",
+        "content_unresolved",
+        "content_bridge_entries",
+        "content_bridge_evicted",
+        "publisher_restarts",
+        "endpoints"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.4"
+    },
+    "clear": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "clear",
+          "description": "Record discriminator: `clear`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Engine clock."
+        },
+        "instance_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The engine process holding this cache, named by the operator (\u00a73.2)."
+        },
+        "scope": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "What was cleared, for example `all`."
+        },
+        "dp_rank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The data parallel worker the clear applies to; **absent means the wire declared none and the clear is global across workers** (\u00a73.2 and the note below)."
+        },
+        "group_idx": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Cache group affected by the clear. Omission applies the clear across all groups."
+        },
+        "tier": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Storage tier the clear applied to; **absent means the clear is global across tiers**."
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Transport sequence of the message that carried this event."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "instance_id",
+        "scope"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.3"
+    },
+    "evict": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "evict",
+          "description": "Record discriminator: `evict`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Engine clock."
+        },
+        "instance_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The engine process whose cache the block left (\u00a73.2)."
+        },
+        "block_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Engine-local identity (\u00a73.1), the same value its `store` carried."
+        },
+        "tier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Storage tier the block left. A block offloaded to another tier is evicted from the one it left."
+        },
+        "dp_rank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The data parallel worker within that instance (\u00a73.2)."
+        },
+        "group_idx": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The cache group within that worker (\u00a73.2)."
+        },
+        "content_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Portable identity (\u00a73.1), resolved from the producer\u2019s identity state."
+        },
+        "locality": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "`LOCAL` or `REMOTE`, relative to the publishing holder."
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Transport sequence of the message that carried this event."
+        },
+        "epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Pseudonymization key epoch."
+        },
+        "backend_id": {
+          "type": "string",
+          "description": "Optional engine-emitted backend identity, scoped to publisher incarnation, rank, group and tier. Pseudonymized at egress.",
+          "x-column-type": "utf8",
+          "x-presence": "optional"
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "instance_id",
+        "block_id"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.3"
+    },
+    "heartbeat": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "heartbeat",
+          "description": "Record discriminator: `heartbeat`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "msgs_seen": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages observed on this subscription."
+        },
+        "dropped": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages known lost on this subscription."
+        },
+        "oversized": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages refused for size."
+        },
+        "unknown_types": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Inbound messages of unmodelled type."
+        },
+        "events_ingested": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Events that reached the record model."
+        },
+        "content_unresolved": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Records emitted with no `content_id`, one per omission (\u00a73.1)."
+        },
+        "content_bridge_entries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Identity-derivation state size (the producer's view of the resident set)."
+        },
+        "content_bridge_evicted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Identity promises refused at the declared capacity; nonzero means some evicts will not resolve, each window also declared via `identity_refused`."
+        },
+        "publisher_restarts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Sequence regressions observed on this subscription; the envelope's `publisher_restarts` is their sum, and `holder_reset` (\u00a72.3) is the record a reader acts on."
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Endpoint"
+          },
+          "x-column-type": "list<struct>",
+          "x-presence": "required",
+          "description": "Per-subscription statistics."
+        },
+        "canary": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "conditional",
+          "description": "Present when identities are keyed (\u00a73.4)."
+        },
+        "reuse_reporting": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "`none` \\| `labelled` \\| `unlabelled`; whether this producer's engine announces cache reuse as a `store`, and whether it can be told apart (\u00a72.3)."
+        },
+        "noraw_scanned": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Values checked by the producer's egress guard."
+        },
+        "rss_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Producer resident memory."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "msgs_seen",
+        "dropped",
+        "oversized",
+        "unknown_types",
+        "events_ingested",
+        "content_unresolved",
+        "content_bridge_entries",
+        "content_bridge_evicted",
+        "publisher_restarts",
+        "endpoints"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.4"
+    },
+    "holder_reset": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "holder_reset",
+          "description": "Record discriminator: `holder_reset`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock at detection (\u00a72.6)."
+        },
+        "instance_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The engine the regressed source observes (\u00a73.2)."
+        },
+        "dp_rank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The worker whose publisher regressed; **absent means the source hosts every rank and the reset is global across workers**."
+        },
+        "group_idx": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Cache group affected by the reset. Omit this field for a publisher sequence regression, which resets all groups."
+        },
+        "boundary_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "**engine clock**: the earliest event timestamp in the regressed message; the instant the reset is ordered at."
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The regressed sequence number, as the wire carried it."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "instance_id",
+        "boundary_ms"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.3"
+    },
+    "identity_refused": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "identity_refused",
+          "description": "Record discriminator: `identity_refused`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "instance_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The affected instance (\u00a73.2)."
+        },
+        "dp_rank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "The affected worker."
+        },
+        "group_idx": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "The affected cache group."
+        },
+        "refused": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Stores denied an identity in the window."
+        },
+        "window_start_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "**engine clock**: first refused store."
+        },
+        "window_end_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "**engine clock**: last refused store."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "instance_id",
+        "dp_rank",
+        "group_idx",
+        "refused",
+        "window_start_ms",
+        "window_end_ms"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.4"
+    },
+    "segment_open": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "segment_open",
+          "description": "Record discriminator: `segment_open`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "incarnation": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Identifies one run of one producer (\u00a74.2)."
+        },
+        "segment_seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Position in that incarnation's sequence, from zero."
+        },
+        "contract_version": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The version of this contract the segment conforms to (\u00a76.1)."
+        },
+        "workload_class": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Purpose of this producer\u2019s traffic, in the operator's vocabulary (\u00a72.7)."
+        },
+        "heartbeat_secs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Declared heartbeat interval (\u00a75.8)."
+        },
+        "max_segment_secs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Declared maximum segment age (\u00a75.8)."
+        },
+        "key_epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "conditional",
+          "description": "Present when identities are keyed (\u00a73.3)."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "incarnation",
+        "segment_seq",
+        "contract_version",
+        "heartbeat_secs",
+        "max_segment_secs"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.5"
+    },
+    "segment_recovered": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "segment_recovered",
+          "description": "Record discriminator: `segment_recovered`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "attributed": {
+          "type": "boolean",
+          "x-column-type": "bool",
+          "x-presence": "required",
+          "description": "Whether the unfinished segment's own identity was readable."
+        },
+        "dropped_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Bytes discarded: the trailing incomplete record of an attributed recovery, or the whole unattributable file."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "attributed",
+        "dropped_bytes"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.5"
+    },
+    "segments_dropped": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "segments_dropped",
+          "description": "Record discriminator: `segments_dropped`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Producer clock."
+        },
+        "incarnation": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The run whose data is gone, not the run that reclaimed it."
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Segments reclaimed."
+        },
+        "first_seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Lowest `segment_seq` reclaimed."
+        },
+        "last_seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Highest `segment_seq` reclaimed."
+        },
+        "first": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Filename of the first segment reclaimed."
+        },
+        "last": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Filename of the last segment reclaimed."
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "incarnation",
+        "count",
+        "first_seq",
+        "last_seq",
+        "first",
+        "last"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.5"
+    },
+    "store": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "const": "store",
+          "description": "Record discriminator: `store`."
+        },
+        "at_ms": {
+          "type": "number",
+          "x-column-type": "float64",
+          "x-presence": "required",
+          "description": "Engine clock."
+        },
+        "instance_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "The engine process holding this cache, named by the operator (\u00a73.2)."
+        },
+        "block_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Engine-local identity (\u00a73.1)."
+        },
+        "n_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "required",
+          "description": "Tokens the block holds."
+        },
+        "tier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-column-type": "utf8",
+          "x-presence": "required",
+          "description": "Storage tier, for example `GPU`."
+        },
+        "dp_rank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The data parallel worker within that instance, which holds its own independent cache (\u00a73.2)."
+        },
+        "group_idx": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The cache group within that worker. Groups hash independently (\u00a73.2)."
+        },
+        "content_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Portable identity (\u00a73.1). Absent where the producer could not derive one."
+        },
+        "parent_id": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "The preceding block in this block's prefix chain."
+        },
+        "parent_unknown": {
+          "type": "boolean",
+          "x-column-type": "bool",
+          "x-presence": "optional",
+          "description": "True when the parent exists but its portable identity could not be resolved. Omit `parent_id` in this case."
+        },
+        "locality": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "`LOCAL` or `REMOTE`, relative to the publishing holder."
+        },
+        "extra_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-column-type": "list<utf8>",
+          "x-presence": "optional",
+          "description": "Additional inputs to this block's identity beyond its tokens, for example a cache salt or a multimodal content hash. Operator controlled text, so each element is pseudonymized independently."
+        },
+        "lora_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Adapter identifier."
+        },
+        "lora_name": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Adapter name."
+        },
+        "spec_kind": {
+          "type": "string",
+          "x-column-type": "utf8",
+          "x-presence": "optional",
+          "description": "Attention kind, for example `full_attention`."
+        },
+        "spec_sliding_window": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "The sliding-window size of this block's cache group, where the engine declares one."
+        },
+        "reused": {
+          "type": "boolean",
+          "x-column-type": "bool",
+          "x-presence": "optional",
+          "description": "This record reports a block already cached rather than a fresh insertion. Only under `reuse_reporting: \"labelled\"` (\u00a72.4)."
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Transport sequence of the message that carried this event."
+        },
+        "epoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-column-type": "int64",
+          "x-presence": "optional",
+          "description": "Pseudonymization key epoch."
+        },
+        "backend_id": {
+          "type": "string",
+          "description": "Optional engine-emitted backend identity, scoped to publisher incarnation, rank, group and tier. Pseudonymized at egress.",
+          "x-column-type": "utf8",
+          "x-presence": "optional"
+        }
+      },
+      "required": [
+        "kind",
+        "at_ms",
+        "instance_id",
+        "block_id",
+        "n_tokens",
+        "tier"
+      ],
+      "additionalProperties": true,
+      "x-section": "2.3",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "parent_unknown": {
+                "const": true
+              }
+            },
+            "required": [
+              "parent_unknown"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "parent_id"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "x-contract-version": "2.1",
+  "x-content-construction": "sha256-chain-128-v2"
+}

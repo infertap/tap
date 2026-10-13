@@ -1,0 +1,16 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "unknown_event_type",
+ "note": "an event kind this build does not model: skipped and counted, not an error",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6e11cefbb9182a474797065af536f6d654675747572654576656e74a877686174657665729301020300",
+ "expect": {
+  "events": [],
+  "unknown_types": 1
+ }
+}

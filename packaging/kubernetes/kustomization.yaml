@@ -1,0 +1,13 @@
+# `kubectl apply -k packaging/kubernetes/` deploys the worked example: the engine
+# Deployment with the tap and shipper sidecars, the ConfigMaps and the Secret shapes.
+# Fill in the Secrets first (tap-config.yaml); never commit them.
+#
+# For your own engine Deployment, do not apply this file. Write a kustomization that lists
+# your Deployment beside tap-config.yaml and applies tap-sidecar.yaml as a patch; the
+# header of tap-sidecar.yaml shows the shape.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - tap-config.yaml
+  - network-policy.yaml
+  - example-vllm-deployment.yaml

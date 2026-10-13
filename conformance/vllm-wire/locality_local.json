@@ -1,0 +1,29 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "locality_local",
+ "note": "CONSTRUCTED, not captured: the explicit form of what every captured event meant implicitly. Carried through unmapped, so an unrecognized value reaches the consumer intact instead of being folded into LOCAL by a lenient parse",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd1918ca474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf34abfb1bd1ea4a1bb1706172656e745f626c6f636b5f68617368cf37281ee67f6d0bbca9746f6b656e5f696473dc00101018111018161012ccc62019ccdc16101811aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da3475055a96c6f72615f6e616d65c0aa65787472615f6b65797391c0a967726f75705f69647800b26b765f63616368655f737065635f6b696e64ae66756c6c5f617474656e74696f6ea86c6f63616c697479a54c4f43414c00",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1785153670149.1587,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 3795403207894256155,
+    "parent_hash": 3974460646483626940,
+    "block_size": 16,
+    "medium": "GPU",
+    "spec_kind": "full_attention",
+    "locality": "LOCAL"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

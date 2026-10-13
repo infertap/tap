@@ -1,0 +1,139 @@
+{
+ "fixture_version": "v0",
+ "name": "staleness_silence_without_a_stop_is_unexplained",
+ "note": "a producer declares its bounds (larger: 300 s), heartbeats, then falls silent for 10_000 s of stream knowledge -- ~33x the bound, decisive under any conforming allowance -- with no agent_stop: unexplained (spec 2.4, the absence IS the signal). The second producer's records place the horizon; a reader judging against wall-clock now instead of the stream's knowledge horizon grades IT stale too, and fails here",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153790000.0,
+    "msgs_seen": 20,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 20,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 20,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153790000.0
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 7200,
+    "max_segment_secs": 14400
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785158730000.0,
+    "msgs_seen": 40,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 40,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 40,
+      "dropped": 0,
+      "last_msg_at_ms": 1785158730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785163790000.0,
+    "msgs_seen": 80,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 80,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 80,
+      "dropped": 0,
+      "last_msg_at_ms": 1785163790000.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "staleness": {
+   "1785153600000-100": "unexplained",
+   "1785153900000-200": "live"
+  }
+ }
+}

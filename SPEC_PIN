@@ -1,0 +1,9 @@
+# The pinned upstream contract. conformance/ is VENDORED from this commit of the public
+# spec repo; `cargo test` verifies the vendored bytes against corpus_sha256 offline on
+# every run, and ci's spec-pin job re-resolves the tag remotely. Bump by editing this file
+# and running scripts/sync-spec.sh. Fixtures are never edited in this repo: a conformance
+# failure is fixed in the implementation, or upstream followed by a pin bump.
+repo=https://github.com/infertap/inference-events
+tag=v1-draft.25
+commit=d962ae23201be0d16be6bd95e8cf73cf32aaa738
+corpus_sha256=69912624e11e928e3257cc2cc5ec609df51b7b461c3cf9cdb1c4e624cd7ba4ba

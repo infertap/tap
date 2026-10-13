@@ -1,0 +1,58 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-main.jsonl#146",
+ "name": "many_events_batch",
+ "note": "a scheduler step carrying several events at once: the recorder coalesces pages, so a step's batch stays short",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6b2b4954c9487a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391d3df03552e41f288efb1706172656e745f626c6f636b5f68617368d3af72008b35937c36a9746f6b656e5f696473dc001013141311101316ccc62019ccdc1018131413aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505587a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391d39f515025e48a2d17b1706172656e745f626c6f636b5f68617368cf769c77944296b5a1a9746f6b656e5f696473dc0010ccdc141617131118101713ccc62019ccdc1416aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505587a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391d399d4eb3b1c77da4fb1706172656e745f626c6f636b5f68617368d3cd105273e206c8afa9746f6b656e5f696473dc0010181116141511ccc62019ccdc140f18111614aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505587a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf1b2bad28e26fbb61b1706172656e745f626c6f636b5f68617368cf5d1e60b1a791bb84a9746f6b656e5f696473dc001010121511140f18ccc62019ccdc1815101215aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756da347505500",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790696138821.6123,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 16069781552551332079,
+    "parent_hash": 12642167701881715766,
+    "block_size": 16,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696138821.6123,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 11480045048822377751,
+    "parent_hash": 8546837671498397089,
+    "block_size": 16,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696138821.6123,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 11084743221978847823,
+    "parent_hash": 14776401035069409455,
+    "block_size": 16,
+    "medium": "GPU"
+   },
+   {
+    "at_ms": 1790696138821.6123,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 1957848854131882849,
+    "parent_hash": 6709906810965441412,
+    "block_size": 16,
+    "medium": "GPU"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

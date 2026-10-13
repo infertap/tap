@@ -1,0 +1,56 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "clear_tier_undeclared",
+ "note": "a clear whose wire shape named no tier: the record omits it, because an absent tier on a clear is a scope declaration (global over tiers) like an undeclared dp_rank -- not an unknown per-block value, which is what a block record's null tier states",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "a",
+   "type": "Cleared",
+   "at_ms": 1785153670010.0,
+   "medium": null,
+   "dp_rank": 0,
+   "group_idx": 0
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "clear": 1,
+   "store": 1
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "kind": "clear",
+    "scope": "all"
+   }
+  ]
+ }
+}

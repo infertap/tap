@@ -1,0 +1,51 @@
+{
+ "fixture_version": "v0",
+ "name": "incarnation_is_an_opaque_token",
+ "note": "the incarnation is equality-comparable and NOTHING else (spec 4.2): this one has none of the reference layout's structure, and every verdict must come out exactly as it would under a well-formed token -- a reader that parses structure out of the token fails here first",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "opaque.token=rev.7",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "c1"
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "content_id": "c1"
+   }
+  ]
+ ],
+ "expect": {
+  "audit": {
+   "i0": {
+    "audited": 1,
+    "agreed": 1,
+    "mismatched": 0,
+    "underresolved": 0,
+    "indeterminate": 0,
+    "unjoined": 0
+   }
+  }
+ }
+}

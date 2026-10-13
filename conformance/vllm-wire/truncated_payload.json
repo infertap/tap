@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "truncated_payload",
+ "note": "a real payload cut mid-message",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd1918ba474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf34abfb1bd1ea4a1bb1706172656e745f626c6f636b5f68617368cf37281ee67f6d0bbca9746f6b656e5f696473dc00101018111018161012ccc62019ccdc",
+ "expect": {
+  "error": {
+   "stage": "decode",
+   "contains": ""
+  }
+ }
+}

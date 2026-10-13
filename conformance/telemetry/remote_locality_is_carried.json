@@ -1,0 +1,82 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "remote_locality_is_carried",
+ "note": "LOCALITY: a block the publisher reports as REMOTE is not its own copy -- it lives in a store the publisher can merely reach. Two publishers reporting one remote block are very likely describing ONE copy, so a consumer that counts remote residency as per-holder residency invents duplication. Carried as-said on both store and evict; the agent states which side of the line the engine put the block on and classifies nothing. Never seen in the capture: KVCacheEvent sets omit_defaults, so a field left at its default is invisible on the wire; this constructed case checks its explicit value",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "locality": "LOCAL"
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670010.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "locality": "REMOTE"
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670020.0,
+   "block_hash": 12955354968414679641,
+   "medium": "GPU",
+   "locality": "REMOTE"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "evict": 1,
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention",
+    "locality": "LOCAL"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention",
+    "locality": "REMOTE"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670020.0,
+    "kind": "evict",
+    "block_id": "12955354968414679641",
+    "tier": "GPU",
+    "locality": "REMOTE"
+   }
+  ]
+ }
+}

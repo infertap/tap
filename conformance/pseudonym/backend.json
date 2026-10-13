@@ -1,0 +1,31 @@
+{
+  "context": "infertap:backend-id:v1",
+  "test_key_hex": "696e6665727461702d636f6e666f726d616e63652d746573742d6b6579212121696e6665727461702d636f6e666f726d616e63652d6e6f6e6365212121212121",
+  "vectors": [
+    {
+      "raw": "cache-a",
+      "epoch": 0,
+      "pseudonym": "14df4104729dba0202bbf0dc1673d24d"
+    },
+    {
+      "raw": "cache-b",
+      "epoch": 0,
+      "pseudonym": "bb737c6cefc0bf0cd20276e331bd51fc"
+    },
+    {
+      "raw": "cache-a",
+      "epoch": 1,
+      "pseudonym": "93354befe0dfda747963ba94be77c455"
+    },
+    {
+      "raw": "\u96ea",
+      "epoch": 0,
+      "pseudonym": "cb8086e2365ac9b44ca928aee2d94a34"
+    },
+    {
+      "raw": "",
+      "epoch": 0,
+      "pseudonym": "65876c8765c19ae34290cb8b1d3a0bbe"
+    }
+  ]
+}

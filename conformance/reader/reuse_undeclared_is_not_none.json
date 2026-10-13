@@ -1,0 +1,58 @@
+{
+ "fixture_version": "v0",
+ "name": "reuse_undeclared_is_not_none",
+ "note": "silence is not the safe-sounding case. A producer that declared nothing has not said its stores are insertions, and reading absence as a declaration is exactly how an unknown becomes a measurement",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153670000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153670000.0
+     }
+    ]
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "content_id": "c1"
+   }
+  ]
+ ],
+ "expect": {
+  "insertions": {
+   "countable": false,
+   "records": null,
+   "tokens": null
+  }
+ }
+}

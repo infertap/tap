@@ -1,0 +1,63 @@
+{
+ "fixture_version": "v0",
+ "name": "clock_a_robust_overlap_survives_the_allowance",
+ "note": "the same content resident on two instances for ten overlapping minutes, stores 50 ms apart: the allowance exists to weaken positives at the boundary, never to destroy real overlap -- an allowance that kills ten minutes is not an allowance, and a reader wielding one fails here (the counter-bracket to the sliver fixture)",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "bC",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "cR"
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "bC",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785154270000.0,
+    "content_id": "cR"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i1",
+    "block_id": "bD",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670050.0,
+    "content_id": "cR"
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i1",
+    "block_id": "bD",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785154270050.0,
+    "content_id": "cR"
+   }
+  ]
+ ],
+ "expect": {
+  "residual_zero": "positive"
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "fixture_version": "v0",
+ "name": "audit_an_evict_across_a_holder_reset_is_unjoined",
+ "note": "the reset is an identity boundary inside ONE producer run (spec 2.3): engine-space ids are comparable only within one engine process, and the reset record is what makes that process boundary visible -- so the pre-reset store is not a join candidate at all, and an evict after the boundary has NO strictly-prior store: unjoined, never a lost promise. A reader keyed only on incarnation gets this wrong in exactly the way the cross-run fixture cannot catch",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "c1"
+   },
+   {
+    "kind": "holder_reset",
+    "at_ms": 1785153670250.0,
+    "instance_id": "i0",
+    "dp_rank": 0,
+    "boundary_ms": 1785153670200.0,
+    "seq": 1
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670300.0
+   }
+  ]
+ ],
+ "expect": {
+  "audit": {
+   "i0": {
+    "audited": 1,
+    "agreed": 0,
+    "mismatched": 0,
+    "underresolved": 0,
+    "indeterminate": 0,
+    "unjoined": 1
+   }
+  }
+ }
+}

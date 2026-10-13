@@ -1,0 +1,105 @@
+{
+ "fixture_version": "v0",
+ "name": "a_bracket_missing_seq_does_not_narrow",
+ "note": "narrowing needs both sides. One record carrying no seq leaves no bracket to narrow to, and a reader that narrowed to the nearest numbered pair would be choosing a span the stream never delimited",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153670000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153670000.0
+     }
+    ]
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "content_id": "c1",
+    "seq": 41
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0,
+    "content_id": "c2"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b3",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670300.0,
+    "content_id": "c3",
+    "seq": 44
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153670400.0,
+    "msgs_seen": 13,
+    "dropped": 1,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 13,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 13,
+      "dropped": 1,
+      "last_msg_at_ms": 1785153670400.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "gap_degraded": [
+   "dropped_delta"
+  ],
+  "gap_span": {
+   "narrowed": false
+  }
+ }
+}

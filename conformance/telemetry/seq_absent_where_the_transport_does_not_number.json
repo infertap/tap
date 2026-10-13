@@ -1,0 +1,56 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "seq_absent_where_the_transport_does_not_number",
+ "note": "a producer whose transport has no sequence omits the field rather than synthesizing one. A manufactured number is a gap detector that can never fire, which is worse than the absent field a reader can see and account for",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670100.0,
+   "block_hash": 10841253731892115301,
+   "medium": "GPU"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "evict": 1,
+   "store": 1
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "kind": "evict",
+    "block_id": "10841253731892115301",
+    "tier": "GPU"
+   }
+  ]
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "fixture_version": "v0",
+ "name": "shared_content_is_a_positive_residual",
+ "note": "the same content on two holders under portable identity: the finding stands on its own evidence and needs no qualification",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "cSHARED"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i1",
+    "block_id": "b9",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "content_id": "cSHARED"
+   }
+  ]
+ ],
+ "expect": {
+  "residual_zero": "positive"
+ }
+}

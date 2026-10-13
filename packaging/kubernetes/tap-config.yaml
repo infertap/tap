@@ -1,0 +1,105 @@
+# Tap configuration, Secret templates, and shipper script. See README.md.
+# Provision secrets through deployment tooling; never commit populated credentials.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infertap-config
+data:
+  # Set a unique name when aggregating multiple clusters.
+  cluster: ""
+  tap.toml: |
+    # Match the engine ranks local to this pod.
+    dp_local = 1
+    dp_max = 1
+    key_file = "/secrets/pseudonym.key"
+    out_dir = "/segments"
+    # Leave emptyDir headroom for active segments and conversion.
+    max_disk_bytes = 6442450944
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: infertap-key
+type: Opaque
+stringData:
+  pseudonym.key: REPLACE-WITH-openssl-rand-hex-64
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: infertap-shipper
+type: Opaque
+stringData:
+  INFERTAP_DEST: "s3:your-bucket/infertap/fleet-a/kv/"
+  RCLONE_CONFIG_S3_TYPE: s3
+  RCLONE_CONFIG_S3_PROVIDER: AWS
+  RCLONE_CONFIG_S3_ENV_AUTH: "true"
+  RCLONE_CONFIG_S3_REGION: us-east-1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infertap-shipper-script
+data:
+  ship.sh: |
+    #!/bin/sh
+    # On termination, wait for this incarnation to close, then upload once more.
+    # Bound periodic, close-wait, and final-upload phases to fit the pod grace period.
+    set -u
+    : "${INFERTAP_SEGMENTS:=/segments}"
+    : "${INFERTAP_PASS_SECS:=15}"
+    : "${INFERTAP_DRAIN_WAIT_SECS:=40}"
+    : "${INFERTAP_DRAIN_UPLOAD_SECS:=30}"
+    ship() {
+      rclone move "$INFERTAP_SEGMENTS/kv" "${INFERTAP_DEST}$(date -u +%Y-%m-%d/%H)/${POD_NAME}/" \
+        --exclude active.jsonl \
+        --exclude '*.jsonl' \
+        --exclude '*.parquet.tmp' \
+        --retries 3 \
+        --low-level-retries 10 \
+        --ignore-errors \
+        --stats-log-level NOTICE \
+        "$@"
+    }
+    drain() {
+      status=0
+      [ -n "${sleeper:-}" ] && kill "$sleeper" 2>/dev/null
+      deadline=$(( $(date +%s) + INFERTAP_DRAIN_WAIT_SECS + 1 ))
+      inc=""
+      closed=""
+      while :; do
+        [ -n "$inc" ] || inc=$(cat "$INFERTAP_SEGMENTS/incarnation" 2>/dev/null || true)
+        if [ -n "$inc" ] && [ -e "$INFERTAP_SEGMENTS/closed-$inc" ]; then
+          closed=$(cat "$INFERTAP_SEGMENTS/closed-$inc" 2>/dev/null || echo unreadable)
+          break
+        fi
+        left=$(( deadline - $(date +%s) ))
+        if [ "$left" -le 0 ]; then
+          if [ -n "$inc" ]; then
+            echo "infertap-ship: tap incarnation $inc did not close within ${INFERTAP_DRAIN_WAIT_SECS}s; shipping what is converted" >&2
+          else
+            echo "infertap-ship: no tap incarnation appeared within ${INFERTAP_DRAIN_WAIT_SECS}s; completion cannot be established, shipping what is converted" >&2
+          fi
+          status=1
+          break
+        fi
+        pass=$INFERTAP_PASS_SECS
+        [ "$pass" -le "$left" ] || pass=$left
+        ship --min-age 2s --retries 1 --max-duration "${pass}s"
+        sleep 1
+      done
+      if [ "$status" -eq 0 ] && [ "$closed" != 0 ]; then
+        echo "infertap-ship: tap incarnation $inc closed with '$closed' segment(s) unconverted; they do not ship" >&2
+        status=1
+      fi
+      ship --retries 1 --max-duration "${INFERTAP_DRAIN_UPLOAD_SECS}s" || status=1
+      [ "$status" -eq 0 ] || echo "infertap-ship: the final pass did not deliver everything" >&2
+      exit "$status"
+    }
+    trap drain TERM INT
+    while true; do
+      ship --min-age 2s --max-duration "${INFERTAP_PASS_SECS}s"
+      sleep 60 &
+      sleeper=$!
+      wait "$sleeper"
+    done

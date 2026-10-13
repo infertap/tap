@@ -1,0 +1,113 @@
+{
+ "fixture_version": "v0",
+ "name": "coverage_a_counted_bracket_is_complete",
+ "note": "start through stop, zero deltas, cache facts inside: full observation, and the coverage beside any figure over the span is exactly 1.0 -- a reader that under-reports a clean bracket manufactures doubt, which is the mirror image of the confident-wrong failure 5.7 exists to prevent",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153700000.0,
+    "content_id": "c1"
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153790000.0,
+    "msgs_seen": 20,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 20,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 20,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153790000.0
+     }
+    ]
+   },
+   {
+    "kind": "agent_stop",
+    "reason": "duration",
+    "at_ms": 1785153850000.0,
+    "msgs_seen": 30,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 30,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 30,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153850000.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "coverage": {
+   "span_ms": [
+    1785153670000.0,
+    1785153850000.0
+   ],
+   "verdict": "complete"
+  }
+ }
+}

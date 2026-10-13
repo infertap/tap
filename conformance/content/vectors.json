@@ -1,0 +1,75 @@
+{
+  "construction": "sha256-chain-128-v2",
+  "vectors": [
+    {
+      "parent": "0",
+      "tokens": [],
+      "extra_keys": null,
+      "content_id": "44123454993824747886190334741723971882",
+      "epoch": 7,
+      "pseudonym": "95ef3b3a1abaff732833ad65064219e2"
+    },
+    {
+      "parent": "0",
+      "tokens": [
+        1,
+        2,
+        3
+      ],
+      "extra_keys": null,
+      "content_id": "145206576886875065994531048785626381834",
+      "epoch": 7,
+      "pseudonym": "8dbcbbe0d7be7ede9ee300744c49c202"
+    },
+    {
+      "parent": "0",
+      "tokens": [
+        1,
+        2,
+        3
+      ],
+      "extra_keys": [],
+      "content_id": "146959976357857439156753334803406445260",
+      "epoch": 7,
+      "pseudonym": "6f71ebffa45f09706bbe0e1861dee039"
+    },
+    {
+      "parent": "0",
+      "tokens": [
+        1,
+        2,
+        3
+      ],
+      "extra_keys": [
+        "tenant-a"
+      ],
+      "content_id": "326118369551385039180918810360368064201",
+      "epoch": 7,
+      "pseudonym": "779effb4010b29f89a5b711f51f97f0e"
+    },
+    {
+      "parent": "1267650600228229401496703205383",
+      "tokens": [
+        4294967295,
+        0
+      ],
+      "extra_keys": [
+        "\u96ea"
+      ],
+      "content_id": "189935430582714756463093542061807005411",
+      "epoch": 7,
+      "pseudonym": "e7904ee8a192065df50eed99526ca71c"
+    },
+    {
+      "parent": "145206576886875065994531048785626381834",
+      "tokens": [
+        4,
+        5
+      ],
+      "extra_keys": null,
+      "content_id": "83960093910074688575194395793377608447",
+      "epoch": 0,
+      "pseudonym": "04b8183b12f24924598de880f3ddf02a"
+    }
+  ]
+}

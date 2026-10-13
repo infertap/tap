@@ -1,0 +1,117 @@
+{
+ "fixture_version": "v0",
+ "name": "uncovered_overlapping_runs_leave_no_blind_spot",
+ "note": "a blue-green handover: run-2 starts at T+150s, BEFORE run-1 stops at T+200s. No moment went unobserved, so a conforming reader reports no uncovered window -- a reader keying on 'a boundary happened' rather than 'nobody was watching' fabricates one and fails here",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "agent_stop",
+    "reason": "duration",
+    "at_ms": 1785153870000.0,
+    "msgs_seen": 20,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 20,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 20,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153870000.0
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153820000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153880000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153880000.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "uncovered": {
+   "i0": []
+  }
+ }
+}

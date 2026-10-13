@@ -1,0 +1,131 @@
+# Example engine Deployment with tap and shipper sidecars.
+# Configure model, images, secrets, and network isolation before applying. See README.md.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: vllm }
+  template:
+    metadata:
+      labels: { app: vllm }
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.30.0
+          args:
+            - Qwen/Qwen2.5-0.5B-Instruct
+            - --port
+            - "8000"
+            - --kv-events-config
+            - '{"enable_kv_cache_events": true, "publisher": "zmq", "endpoint": "tcp://*:5557", "replay_endpoint": "tcp://*:5657"}'
+          ports:
+            - name: http
+              containerPort: 8000
+          resources:
+            limits: { nvidia.com/gpu: 1, cpu: "8", memory: 32Gi }
+            requests: { nvidia.com/gpu: 1, cpu: "8", memory: 32Gi }
+        - name: tap
+          image: ghcr.io/infertap/tap:v0.1.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              instance="${CLUSTER_ID:+$CLUSTER_ID/}$POD_NAMESPACE/$POD_NAME"
+              exec /usr/local/bin/infertap \
+                --config /etc/infertap/tap.toml \
+                --engine-endpoint "$instance=tcp://127.0.0.1:5557" \
+                --engine-replay-endpoint "$instance=tcp://127.0.0.1:5657" \
+                --provenance "{\"model\": \"Qwen/Qwen2.5-0.5B-Instruct\", \"pod_identity\": \"$POD_NAME\", \"pod_uid\": \"$POD_UID\"}"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: CLUSTER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: infertap-config
+                  key: cluster
+                  optional: true
+          livenessProbe:
+            exec:
+              command: ["/usr/local/bin/infertap", "probe", "--config", "/etc/infertap/tap.toml"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: infertap-config
+              mountPath: /etc/infertap
+              readOnly: true
+            - name: infertap-key
+              mountPath: /secrets
+              readOnly: true
+            - name: infertap-segments
+              mountPath: /segments
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits: { cpu: 1500m, memory: 1Gi }
+            requests: { cpu: 1500m, memory: 1Gi }
+        - name: shipper
+          image: rclone/rclone:1.68
+          command: ["/bin/sh", "/scripts/ship.sh"]
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          envFrom:
+            - secretRef:
+                name: infertap-shipper
+          volumeMounts:
+            - name: infertap-segments
+              mountPath: /segments
+            - name: infertap-shipper-script
+              mountPath: /scripts
+              readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits: { cpu: 500m, memory: 256Mi }
+            requests: { cpu: 500m, memory: 256Mi }
+      volumes:
+        - name: infertap-config
+          configMap:
+            name: infertap-config
+        - name: infertap-key
+          secret:
+            secretName: infertap-key
+        - name: infertap-shipper-script
+          configMap:
+            name: infertap-shipper-script
+            defaultMode: 0555
+        - name: infertap-segments
+          emptyDir:
+            sizeLimit: 8Gi

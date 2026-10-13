@@ -1,0 +1,28 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-hicache.jsonl#54",
+ "name": "stored_host_tier",
+ "note": "a write-through to the host tier: medium CPU_PINNED, the same hashes and tokens as the GPU store",
+ "source": "s0",
+ "wire_hex": "93cb41daaef7a6a152629187a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391d3fe1ac4c3c48a8c78b1706172656e745f626c6f636b5f68617368cf66be329edb7d4b06a9746f6b656e5f696473dc001030141119ccdc18180f101614101118ccc620aa626c6f636b5f73697a6510a76c6f72615f6964c0a66d656469756daa4350555f50494e4e454400",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790697114520.6533,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 18310163580123253880,
+    "parent_hash": 7403410495312317190,
+    "block_size": 16,
+    "medium": "CPU_PINNED"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

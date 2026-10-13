@@ -1,0 +1,80 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "holder_reset_closes_the_scope",
+ "note": "the producer observed a publisher sequence regression: the engine restarted and its cache is gone, announced by nothing on the wire. ONE scope-level record, emitted before the regressed message's own events so stream order and timestamp order agree; it names no blocks, and expansion over open residencies is the consumer's job. The boundary-instant store belongs to the fresh cache: closes sort before stores",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "seq": 100
+  },
+  {
+   "source": "a",
+   "type": "HolderReset",
+   "at_ms": 1785153731000.0,
+   "boundary_ms": 1785153671000.0,
+   "dp_rank": 0,
+   "seq": 1
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153671000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "seq": 1
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "holder_reset": 1,
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "seq": 100,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "at_ms": 1785153731000.0,
+    "seq": 1,
+    "kind": "holder_reset",
+    "boundary_ms": 1785153671000.0
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153671000.0,
+    "seq": 1,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

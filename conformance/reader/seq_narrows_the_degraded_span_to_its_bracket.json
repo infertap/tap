@@ -1,0 +1,120 @@
+{
+ "fixture_version": "v0",
+ "name": "seq_narrows_the_degraded_span_to_its_bracket",
+ "note": "a dropped delta localizes a loss no better than the interval between two heartbeats. With seq on the records, the discontinuity sits between two observed numbers in one incarnation, so only that bracket is degraded and the facts outside it survive a loss they cannot have been part of",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153670000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153670000.0
+     }
+    ]
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "content_id": "c1",
+    "seq": 41
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0,
+    "content_id": "c2",
+    "seq": 42
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b3",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670300.0,
+    "content_id": "c3",
+    "seq": 44
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b4",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670400.0,
+    "content_id": "c4",
+    "seq": 45
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153670500.0,
+    "msgs_seen": 14,
+    "dropped": 1,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 14,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 14,
+      "dropped": 1,
+      "last_msg_at_ms": 1785153670500.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "gap_degraded": [
+   "dropped_delta"
+  ],
+  "gap_span": {
+   "narrowed": true,
+   "start_ms": 1785153670200.0,
+   "end_ms": 1785153670300.0
+  }
+ }
+}

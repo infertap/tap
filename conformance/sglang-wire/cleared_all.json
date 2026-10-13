@@ -1,0 +1,23 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "capture": "capture-sglang-main.jsonl#150",
+ "name": "cleared_all",
+ "note": "a captured AllBlocksCleared from /flush_cache: fieldless, scoped by the batch's attn_dp_rank alone",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6b3042dd19181a474797065b0416c6c426c6f636b73436c656172656400",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790696140065.2964,
+    "dp_rank": 0,
+    "type": "Cleared"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

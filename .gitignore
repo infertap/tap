@@ -1,0 +1,14 @@
+/target
+Cargo.lock.orig
+
+# Working review notes, not part of the shipped docs.
+docs/design/remediation-checklist.md
+docs/design/reader-split.md
+docs/design/review-worklist.md
+
+# Finder litter.
+.DS_Store
+
+# The vLLM capture the adapter was derived from: fetched and verified by scripts/fetch-capture.sh,
+# never carried in the tree (it lives in the spec repository and on the corpus tag's release).
+/capture/

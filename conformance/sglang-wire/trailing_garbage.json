@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "trailing_garbage",
+ "note": "a complete, valid batch followed by junk: a decoder must consume the whole buffer",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6e11cefbb9000c1c1c1c1",
+ "expect": {
+  "error": {
+   "stage": "decode",
+   "contains": "trailing byte"
+  }
+ }
+}

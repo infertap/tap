@@ -1,0 +1,100 @@
+{
+ "fixture_version": "v0",
+ "name": "canary_split_key_material_is_not_a_measured_zero",
+ "note": "two producers, two canaries, and nothing on the wire that relates them -- the testimony that once could is exactly what 3.4 forbids. Identities under different keys cannot match at any overlap, so the zero describes the provisioning, not the traffic: split_key_space. A reader that folds the two spaces on any heuristic grades this a measured absence and fails -- the fold is what would let one mis-provisioned node silence the alarm fleet-wide",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153671000.0,
+    "msgs_seen": 5,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 5,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 5,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153671000.0
+     }
+    ],
+    "canary": "c0ffee11c0ffee11c0ffee11c0ffee11"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "1a2b3c",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153680000.0,
+    "content_id": "aa1111"
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153671000.0,
+    "msgs_seen": 5,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 5,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 5,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153671000.0
+     }
+    ],
+    "canary": "deadbeefdeadbeefdeadbeefdeadbeef"
+   },
+   {
+    "kind": "store",
+    "instance_id": "i1",
+    "block_id": "4d5e6f",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153681000.0,
+    "content_id": "bb2222"
+   }
+  ]
+ ],
+ "expect": {
+  "residual_zero": "split_key_space"
+ }
+}

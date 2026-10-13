@@ -1,0 +1,6 @@
+# cargo-audit policy (trust document, section 5). The advisory audit runs in CI on every push and
+# weekly, and here is the one place an advisory may be waived: an entry names the
+# advisory, the reason it does not apply to the shipped binary, and the condition that
+# removes the entry. Empty is the normal state; a waiver is a visible diff.
+[advisories]
+ignore = []

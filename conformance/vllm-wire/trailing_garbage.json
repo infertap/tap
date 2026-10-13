@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "trailing_garbage",
+ "note": "a complete, valid batch followed by junk. rmp_serde's from_slice decoded the leading value and ignored the remainder, so appended bytes rode along unnoticed on an input the threat model calls semi-trusted; decode_payload now consumes the buffer",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd19000c1c1c1c1",
+ "expect": {
+  "error": {
+   "stage": "decode",
+   "contains": "trailing byte"
+  }
+ }
+}

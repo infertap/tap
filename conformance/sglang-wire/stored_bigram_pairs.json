@@ -1,0 +1,26 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "sglang": "0.5.20",
+  "event_schema": "sglang-0.5.20-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "stored_bigram_pairs",
+ "note": "CONSTRUCTED: token pairs are not token ids; the store is kept and no identity is derived",
+ "source": "s0",
+ "wire_hex": "93cb41daaef6e11cefbb9187a474797065ab426c6f636b53746f726564ac626c6f636b5f68617368657391cf3d8931dd183f224bb1706172656e745f626c6f636b5f68617368c0a9746f6b656e5f69647392920102920203aa626c6f636b5f73697a6502a76c6f72615f6964c0a66d656469756da347505500",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1790696324452.132,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Stored",
+    "block_hash": 4434130133787288139,
+    "block_size": 2,
+    "medium": "GPU"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

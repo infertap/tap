@@ -1,0 +1,37 @@
+# infertap configuration. Every key is a flag from `infertap --help` with underscores
+# instead of dashes; a flag on the command line beats INFERTAP_<FLAG> in the environment,
+# which beats this file. `key` is never read from a file: name `key_file`.
+
+# The engine's KV-events publisher(s), label=address. One tap per node is the shape;
+# data-parallel ranks derive from dp_start_rank / dp_local / dp_max.
+engine_endpoint = ["i0=tcp://127.0.0.1:5557"]
+# The engine's replay ring, same labels: a late-attaching tap recovers recent history.
+engine_replay_endpoint = ["i0=tcp://127.0.0.1:5657"]
+
+# Egress pseudonymization key: 64 bytes, hex or base64, from a file the process can read
+# and nobody else can. Under the shipped systemd unit the key arrives through
+# LoadCredential and the UNIT names it on ExecStart (a flag beats this file), so leave this
+# unset there; set it when running the binary any other way.
+# key_file = "/etc/infertap/pseudonym.key"
+# Or, for a bounded local inspection ONLY, run keyless explicitly:
+# raw_ids = true
+
+# The tap's output root. The KV-cache stream is written under <out_dir>/kv/; only sealed
+# segments are shipped, and the shipper moves that subdirectory.
+out_dir = "/var/lib/infertap"
+# The segment and retention bounds keep their defaults unless set here; the defaults and
+# their derivation are in `infertap --help` and docs/install.md ("Flag reference").
+# segment_bytes = 67108864
+# segment_secs = 300
+# max_disk_bytes = 17179869184
+
+# Declared once per segment header, in your own vocabulary.
+# workload_class = "agentic"
+
+# heartbeat_secs = 60
+# provenance = "/etc/infertap/provenance.json"
+
+# Diagnostics: one line per event on stderr. json for a log pipeline; text is the default
+# and carries the journal's priority prefix under systemd.
+# log_level = "info"
+# log_format = "text"

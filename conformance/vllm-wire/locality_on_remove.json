@@ -1,0 +1,26 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "locality_on_remove",
+ "note": "CONSTRUCTED: BlockRemoved carries locality too, so a consumer can close an interval on the same side it opened it",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd19185a474797065ac426c6f636b52656d6f766564ac626c6f636b5f68617368657391cf34abfb1bd1ea4a1ba66d656469756da3475055a967726f75705f69647800a86c6f63616c697479a652454d4f544500",
+ "expect": {
+  "events": [
+   {
+    "at_ms": 1785153670149.1587,
+    "dp_rank": 0,
+    "group_idx": 0,
+    "type": "Removed",
+    "block_hash": 3795403207894256155,
+    "medium": "GPU",
+    "locality": "REMOTE"
+   }
+  ],
+  "unknown_types": 0
+ }
+}

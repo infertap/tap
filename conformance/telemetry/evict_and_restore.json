@@ -1,0 +1,76 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "evict_and_restore",
+ "note": "store, evict, store again. The agent holds no state, so the second store is just a store -- calling it a recompute is an aggregator-side self-join over this stream",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670100.0,
+   "block_hash": 10841253731892115301,
+   "medium": "GPU"
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670200.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention"
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "evict": 1,
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "kind": "evict",
+    "block_id": "10841253731892115301",
+    "tier": "GPU"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

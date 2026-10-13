@@ -1,0 +1,16 @@
+# Non-root runtime image containing the prebuilt release binary for each architecture.
+# The release workflow checks both binaries against glibc 2.31 and runs their smoke tests.
+#
+#   docker buildx build --platform linux/amd64,linux/arm64 -f packaging/docker/Dockerfile.release \
+#     --build-context dist=dist -t ghcr.io/infertap/tap:<tag> --push .
+FROM debian:trixie-slim
+ARG TARGETARCH
+RUN useradd --system --uid 65532 --shell /usr/sbin/nologin infertap \
+    && mkdir -p /out && chown 65532:65532 /out
+# dist/<arch>/infertap, staged by the workflow: amd64 from target/release, arm64 from
+# target/aarch64-unknown-linux-gnu/release.
+COPY --from=dist ${TARGETARCH}/infertap /usr/local/bin/infertap
+COPY LICENSE NOTICE THIRD-PARTY-NOTICES /usr/share/doc/infertap/
+USER 65532:65532
+ENTRYPOINT ["/usr/local/bin/infertap"]
+CMD ["--help"]

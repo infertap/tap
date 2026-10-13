@@ -1,0 +1,104 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "seq_rides_every_cache_record",
+ "note": "the transport sequence of the message an event arrived in, carried onto the records so a reader can localize a loss to a bracket instead of to a whole heartbeat interval. Every record derived from one message shares its number -- seq identifies a MESSAGE, not a record -- and it rides evicts and clears exactly as it rides stores",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "seq": 41
+  },
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 12955354968414679641,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "parent_hash": 10841253731892115301,
+   "seq": 41
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670100.0,
+   "block_hash": 10841253731892115301,
+   "medium": "GPU",
+   "seq": 42
+  },
+  {
+   "source": "a",
+   "type": "Cleared",
+   "at_ms": 1785153670200.0,
+   "medium": "GPU",
+   "dp_rank": 0,
+   "group_idx": 0,
+   "seq": 43
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "clear": 1,
+   "evict": 1,
+   "store": 2
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "seq": 41,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "seq": 41,
+    "kind": "store",
+    "block_id": "12955354968414679641",
+    "parent_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "seq": 42,
+    "kind": "evict",
+    "block_id": "10841253731892115301",
+    "tier": "GPU"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0,
+    "seq": 43,
+    "kind": "clear",
+    "scope": "all",
+    "tier": "GPU"
+   }
+  ]
+ }
+}

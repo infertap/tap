@@ -1,0 +1,56 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "tier_absent_stays_null",
+ "note": "an event with no medium: tier is null rather than omitted, because the field is always present on cache records and only its value is unknown",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": null,
+   "spec_kind": "full_attention"
+  },
+  {
+   "source": "a",
+   "type": "Removed",
+   "at_ms": 1785153670010.0,
+   "block_hash": 10841253731892115301,
+   "medium": null
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "evict": 1,
+   "store": 1
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "n_tokens": 16,
+    "tier": null,
+    "spec_kind": "full_attention"
+   },
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670010.0,
+    "kind": "evict",
+    "block_id": "10841253731892115301",
+    "tier": null
+   }
+  ]
+ }
+}

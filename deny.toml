@@ -1,0 +1,35 @@
+# cargo-deny: the dependency tree must stay permissive, with no copyleft and no
+# source-disclosure obligation, so an Apache-2.0 binary that embeds in someone else's stack
+# imposes nothing on it. Dependencies come from crates.io only and carry no unpatched
+# advisories. This file implements section 5 of the trust document and runs in CI next to
+# the RustSec audit.
+
+# fs2 uses the existing MIT/Apache-2.0 allowance; its platform dependencies are permissive.
+[licenses]
+# The crate itself is Apache-2.0 and unpublished (publish = false); this gate governs
+# dependencies only.
+private = { ignore = true }
+# Exactly the set the tree contains today. An allowance nothing uses is pruned, so a new
+# licence entering the tree is a visible diff here, not a silent pass.
+allow = [
+    "Apache-2.0",
+    "MIT",
+    "BSD-3-Clause",
+    "Unicode-3.0",
+    # tiny-keccak alone: a build-time dependency of ahash's compile-time RNG, reached
+    # through parquet, hashbrown, ahash, and const-random. Public-domain dedication with
+    # no obligation; nothing of it ships in the binary. Prune this entry when the parquet
+    # tree drops const-random or the entry stops matching anything.
+    "CC0-1.0",
+]
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+
+[advisories]
+yanked = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

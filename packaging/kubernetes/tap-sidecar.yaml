@@ -1,0 +1,112 @@
+# Strategic-merge patch for an existing engine Deployment. See README.md.
+# Configure event-port isolation before enabling the publisher.
+# At default shipper budgets, termination grace must cover 15 + 40 + 1 + 30 + 10 = 96 s.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm # replaced by the kustomize target; kept so the file is valid on its own
+spec:
+  template:
+    spec:
+      containers:
+        - name: tap
+          image: ghcr.io/infertap/tap:v0.1.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              instance="${CLUSTER_ID:+$CLUSTER_ID/}$POD_NAMESPACE/$POD_NAME"
+              exec /usr/local/bin/infertap \
+                --config /etc/infertap/tap.toml \
+                --engine-endpoint "$instance=tcp://127.0.0.1:5557" \
+                --engine-replay-endpoint "$instance=tcp://127.0.0.1:5657" \
+                --provenance "{\"model\": \"REPLACE-WITH-served-model-name\", \"pod_identity\": \"$POD_NAME\", \"pod_uid\": \"$POD_UID\"}"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: CLUSTER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: infertap-config
+                  key: cluster
+                  optional: true
+          livenessProbe:
+            exec:
+              command: ["/usr/local/bin/infertap", "probe", "--config", "/etc/infertap/tap.toml"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: infertap-config
+              mountPath: /etc/infertap
+              readOnly: true
+            - name: infertap-key
+              mountPath: /secrets
+              readOnly: true
+            - name: infertap-segments
+              mountPath: /segments
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits: { cpu: 1500m, memory: 1Gi }
+            requests: { cpu: 1500m, memory: 1Gi }
+        - name: shipper
+          image: rclone/rclone:1.68
+          command: ["/bin/sh", "/scripts/ship.sh"]
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          envFrom:
+            - secretRef:
+                name: infertap-shipper
+          volumeMounts:
+            - name: infertap-segments
+              mountPath: /segments
+            - name: infertap-shipper-script
+              mountPath: /scripts
+              readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits: { cpu: 500m, memory: 256Mi }
+            requests: { cpu: 500m, memory: 256Mi }
+      volumes:
+        - name: infertap-config
+          configMap:
+            name: infertap-config
+        - name: infertap-key
+          secret:
+            secretName: infertap-key
+        - name: infertap-shipper-script
+          configMap:
+            name: infertap-shipper-script
+            defaultMode: 0555
+        - name: infertap-segments
+          emptyDir:
+            sizeLimit: 8Gi

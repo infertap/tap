@@ -1,0 +1,574 @@
+{
+ "schema_version": "v1",
+ "note": "Generated from schema/records.schema.json by tools/gen-schema.py.",
+ "types": {
+  "string": "utf8",
+  "integer": "int64",
+  "number": "float64",
+  "boolean": "bool",
+  "array of string": "list<utf8>",
+  "array": "list<struct>"
+ },
+ "endpoints_element": {
+  "dropped": {
+   "type": "int64",
+   "presence": "required"
+  },
+  "endpoint": {
+   "type": "utf8",
+   "presence": "required"
+  },
+  "last_msg_at_ms": {
+   "type": "float64",
+   "presence": "optional"
+  },
+  "msgs_seen": {
+   "type": "int64",
+   "presence": "required"
+  },
+  "publisher_restarts": {
+   "type": "int64",
+   "presence": "optional"
+  },
+  "source": {
+   "type": "utf8",
+   "presence": "required"
+  },
+  "topic": {
+   "type": "utf8",
+   "presence": "optional"
+  }
+ },
+ "kinds": {
+  "agent_start": {
+   "section": "2.4",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "agent_start"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "agent_version": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "egress": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "endpoint_count": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "max_payload_bytes": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "canary": {
+     "type": "utf8",
+     "presence": "conditional"
+    },
+    "reuse_reporting": {
+     "type": "utf8",
+     "presence": "optional"
+    }
+   }
+  },
+  "agent_stop": {
+   "section": "2.4",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "agent_stop"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "reason": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "msgs_seen": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "dropped": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "oversized": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "unknown_types": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "events_ingested": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "content_unresolved": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "content_bridge_entries": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "content_bridge_evicted": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "publisher_restarts": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "reuse_reporting": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "endpoints": {
+     "type": "list<struct>",
+     "presence": "required"
+    },
+    "canary": {
+     "type": "utf8",
+     "presence": "conditional"
+    }
+   }
+  },
+  "clear": {
+   "section": "2.3",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "clear"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "instance_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "scope": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "dp_rank": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "group_idx": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "tier": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "seq": {
+     "type": "int64",
+     "presence": "optional"
+    }
+   }
+  },
+  "evict": {
+   "section": "2.3",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "evict"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "instance_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "block_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "tier": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "dp_rank": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "group_idx": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "content_id": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "locality": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "seq": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "epoch": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "backend_id": {
+     "type": "utf8",
+     "presence": "optional"
+    }
+   }
+  },
+  "heartbeat": {
+   "section": "2.4",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "heartbeat"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "msgs_seen": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "dropped": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "oversized": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "unknown_types": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "events_ingested": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "content_unresolved": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "content_bridge_entries": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "content_bridge_evicted": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "publisher_restarts": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "endpoints": {
+     "type": "list<struct>",
+     "presence": "required"
+    },
+    "canary": {
+     "type": "utf8",
+     "presence": "conditional"
+    },
+    "reuse_reporting": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "noraw_scanned": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "rss_bytes": {
+     "type": "int64",
+     "presence": "optional"
+    }
+   }
+  },
+  "holder_reset": {
+   "section": "2.3",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "holder_reset"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "instance_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "dp_rank": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "group_idx": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "boundary_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "seq": {
+     "type": "int64",
+     "presence": "optional"
+    }
+   }
+  },
+  "identity_refused": {
+   "section": "2.4",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "identity_refused"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "instance_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "dp_rank": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "group_idx": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "refused": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "window_start_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "window_end_ms": {
+     "type": "float64",
+     "presence": "required"
+    }
+   }
+  },
+  "segment_open": {
+   "section": "2.5",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "segment_open"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "incarnation": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "segment_seq": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "contract_version": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "workload_class": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "heartbeat_secs": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "max_segment_secs": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "key_epoch": {
+     "type": "int64",
+     "presence": "conditional"
+    }
+   }
+  },
+  "segment_recovered": {
+   "section": "2.5",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "segment_recovered"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "attributed": {
+     "type": "bool",
+     "presence": "required"
+    },
+    "dropped_bytes": {
+     "type": "int64",
+     "presence": "required"
+    }
+   }
+  },
+  "segments_dropped": {
+   "section": "2.5",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "segments_dropped"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "incarnation": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "count": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "first_seq": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "last_seq": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "first": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "last": {
+     "type": "utf8",
+     "presence": "required"
+    }
+   }
+  },
+  "store": {
+   "section": "2.3",
+   "fields": {
+    "kind": {
+     "type": "utf8",
+     "presence": "required",
+     "const": "store"
+    },
+    "at_ms": {
+     "type": "float64",
+     "presence": "required"
+    },
+    "instance_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "block_id": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "n_tokens": {
+     "type": "int64",
+     "presence": "required"
+    },
+    "tier": {
+     "type": "utf8",
+     "presence": "required"
+    },
+    "dp_rank": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "group_idx": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "content_id": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "parent_id": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "parent_unknown": {
+     "type": "bool",
+     "presence": "optional"
+    },
+    "locality": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "extra_keys": {
+     "type": "list<utf8>",
+     "presence": "optional"
+    },
+    "lora_id": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "lora_name": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "spec_kind": {
+     "type": "utf8",
+     "presence": "optional"
+    },
+    "spec_sliding_window": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "reused": {
+     "type": "bool",
+     "presence": "optional"
+    },
+    "seq": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "epoch": {
+     "type": "int64",
+     "presence": "optional"
+    },
+    "backend_id": {
+     "type": "utf8",
+     "presence": "optional"
+    }
+   }
+  }
+ }
+}

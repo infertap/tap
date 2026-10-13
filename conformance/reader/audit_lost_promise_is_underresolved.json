@@ -1,0 +1,69 @@
+{
+ "fixture_version": "v0",
+ "name": "audit_lost_promise_is_underresolved",
+ "note": "same run stored it with an identity; the evict carries none. The producer held the promise and lost it (a capacity refusal, an over-released clear, a defect) -- declared-missing rather than silent-wrong, surfaced as underresolved. Matching absence, by contrast, is agreement: a store that could not chain makes an evict that cannot resolve",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "c1"
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670300.0
+   }
+  ]
+ ],
+ "expect": {
+  "audit": {
+   "i0": {
+    "audited": 2,
+    "agreed": 1,
+    "mismatched": 0,
+    "underresolved": 1,
+    "indeterminate": 0,
+    "unjoined": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "unknown_event_type",
+ "note": "an event kind this build does not model. NOT an error: skipped and counted, so an engine that adds a kind cannot take the tap down mid-upgrade",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd19183a474797065af536f6d654675747572654576656e74a8776861746576657293010203a967726f75705f6964780000",
+ "expect": {
+  "events": [],
+  "unknown_types": 1
+ }
+}

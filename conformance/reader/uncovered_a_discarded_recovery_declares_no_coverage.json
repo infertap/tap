@@ -1,0 +1,127 @@
+{
+ "fixture_version": "v0",
+ "name": "uncovered_a_discarded_recovery_declares_no_coverage",
+ "note": "run-2 found a headerless file at start and discarded it, declaring the discard as the second record of its first segment (spec 4.3). The span that file covered was already uncovered -- it precedes run-2's start -- so the window is byte-for-byte the crash fixture's: a reader that widens or narrows it on the declaration fails here",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153790000.0,
+    "msgs_seen": 20,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 20,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 20,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153790000.0
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 300,
+    "max_segment_secs": 600
+   },
+   {
+    "kind": "segment_recovered",
+    "at_ms": 1785154069000.0,
+    "attributed": false,
+    "dropped_bytes": 4096
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785154070000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785154130000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785154130000.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "uncovered": {
+   "i0": [
+    [
+     1785153790000.0,
+     1785154070000.0
+    ]
+   ]
+  }
+ }
+}

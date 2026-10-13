@@ -1,0 +1,41 @@
+{
+ "fixture_version": "v0",
+ "provenance": {
+  "gpu": "fixture",
+  "vllm_version": "0.26.0",
+  "event_schema_version": "vllm-0.26.0-map"
+ },
+ "name": "parent_unknown_is_not_a_root",
+ "note": "an UNKNOWN parent rides its own field and never becomes an absent parent_id. Absence means 'begins a prefix chain', which the aggregator treats as vacuously proven and therefore contributing -- so collapsing unknown into absent would fabricate roots and inflate residual mass. Arises when a stored run has blocks skipped (sliding-window, Mamba), where list order stops implying parenthood",
+ "events": [
+  {
+   "source": "a",
+   "type": "Stored",
+   "at_ms": 1785153670000.0,
+   "block_hash": 10841253731892115301,
+   "block_size": 16,
+   "medium": "GPU",
+   "spec_kind": "full_attention",
+   "parent_unknown": true
+  }
+ ],
+ "expect": {
+  "record_counts": {
+   "store": 1
+  },
+  "records": [
+   {
+    "instance_id": "a",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "kind": "store",
+    "block_id": "10841253731892115301",
+    "parent_unknown": true,
+    "n_tokens": 16,
+    "tier": "GPU",
+    "spec_kind": "full_attention"
+   }
+  ]
+ }
+}

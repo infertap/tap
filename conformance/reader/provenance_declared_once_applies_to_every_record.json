@@ -1,0 +1,47 @@
+{
+ "fixture_version": "v0",
+ "name": "provenance_declared_once_applies_to_every_record",
+ "note": "the header carries provenance and the records carry none. A reader applies the segment's declaration to every record in it -- provenance is a property of the producer RUN, and on the published corpus repeating it per record costs 32% of the stream for one distinct value (spec 2.2)",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.2",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "gpu": "fixture",
+    "vllm_version": "0.26.0",
+    "event_schema_version": "vllm-0.26.0-map",
+    "workload_class": "agentic",
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153671000.0
+   }
+  ]
+ ],
+ "expect": {
+  "attribution": [
+   {
+    "segment": 0,
+    "provenance": {
+     "gpu": "fixture",
+     "vllm_version": "0.26.0",
+     "event_schema_version": "vllm-0.26.0-map",
+     "heartbeat_secs": 60,
+     "max_segment_secs": 300
+    },
+    "workload_class": "agentic"
+   }
+  ]
+ }
+}

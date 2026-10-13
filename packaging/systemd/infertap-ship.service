@@ -1,0 +1,52 @@
+# Upload sealed segments and remove local files after success.
+# Requires rclone at /usr/bin/rclone and /etc/infertap/ship.env.
+# Install with infertap-ship.timer; see docs/install.md.
+[Unit]
+Description=infertap segment shipper
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/infertap/ship.env
+RuntimeDirectory=infertap-ship
+Environment=HOME=%t/infertap-ship
+Environment=GOMAXPROCS=4
+
+# Exclude active/WAL/temporary files. A source removed by retention may disappear
+# between listing and upload; --ignore-errors allows the remaining transfers to proceed.
+# systemd expands %H; doubled dollars and percent signs reach the shell literally.
+ExecStart=/bin/sh -c 'exec /usr/bin/rclone move /var/lib/infertap/kv "$${INFERTAP_DEST}$$(date -u +%%Y-%%m-%%d/%%H)/%H/" \
+    --exclude active.jsonl \
+    --exclude "*.jsonl" \
+    --exclude "*.parquet.tmp" \
+    --retries 3 \
+    --low-level-retries 10 \
+    --ignore-errors \
+    --stats-log-level NOTICE'
+
+# Share the writer account so successful uploads can delete their local source.
+User=infertap
+Group=infertap
+RemoveIPC=yes
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ReadWritePaths=/var/lib/infertap
+RestrictAddressFamilies=AF_INET AF_INET6
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallArchitectures=native
+MemoryMax=256M
+TasksMax=128

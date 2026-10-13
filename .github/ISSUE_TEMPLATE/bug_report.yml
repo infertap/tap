@@ -1,0 +1,54 @@
+name: Bug report
+description: Report unexpected behavior.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report security vulnerabilities privately to cort@infertap.ai; see SECURITY.md. Remove keys, credentials, prompts, and sensitive labels from logs and commands. Do not attach raw engine captures: they can contain tokenized prompts.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The output of `infertap --version`.
+      placeholder: Paste the output of infertap --version.
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What the tap did, with sanitized stderr or the journal lines (`journalctl -u infertap`) around it.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What the documentation, the trust document or the event model says should have happened.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: Provide minimal reproduction steps and sanitized configuration.
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Engine and version (for example vLLM 0.30.0), OS or Kubernetes version, how the tap was installed (tarball, image, sidecar manifest, systemd unit), and whether the build has the `zmq` feature.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched the existing issues.
+          required: true
+        - label: This is not a security vulnerability (those go to `SECURITY.md`).
+          required: true

@@ -1,0 +1,139 @@
+{
+ "fixture_version": "v0",
+ "name": "staleness_is_judged_against_the_larger_bound",
+ "note": "heartbeat_secs=60 but max_segment_secs=7200, an OBSERVED 60 s heartbeat cadence, and then 2_000 s of silence: ~33x past the heartbeat bound and the observed cadence alike, well inside the larger declared bound. Spec 5.8 makes the declared bounds the entire basis and sets the threshold at the LARGER one, so the verdict is live -- a reader alarming on the heartbeat bound, or on the cadence it observed, fails here. The producer missing its own heartbeat cadence is a producer defect, and a different fact from staleness",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 7200
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153790000.0,
+    "msgs_seen": 20,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 20,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 20,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153790000.0
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 1800,
+    "max_segment_secs": 3600
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785154730000.0,
+    "msgs_seen": 40,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 40,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 40,
+      "dropped": 0,
+      "last_msg_at_ms": 1785154730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785155790000.0,
+    "msgs_seen": 80,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 80,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 80,
+      "dropped": 0,
+      "last_msg_at_ms": 1785155790000.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "staleness": {
+   "1785153600000-100": "live",
+   "1785153900000-200": "live"
+  }
+ }
+}

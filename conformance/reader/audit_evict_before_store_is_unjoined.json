@@ -1,0 +1,70 @@
+{
+ "fixture_version": "v0",
+ "name": "audit_evict_before_store_is_unjoined",
+ "note": "an evict before any store (a warm cache the producer never saw stored), and a same-instant store+evict pair (one batch stamps one timestamp, so order is unknowable): both fall to unjoined rather than being graded against a future or a guess",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670100.0,
+    "content_id": "c1"
+   },
+   {
+    "kind": "evict",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670200.0,
+    "content_id": "c2"
+   }
+  ]
+ ],
+ "expect": {
+  "audit": {
+   "i0": {
+    "audited": 2,
+    "agreed": 0,
+    "mismatched": 0,
+    "underresolved": 0,
+    "indeterminate": 0,
+    "unjoined": 2
+   }
+  }
+ }
+}

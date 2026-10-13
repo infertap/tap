@@ -1,0 +1,45 @@
+{
+ "corpus": "delivery",
+ "schema_version": "v0",
+ "note": "The on-disk contract between the tap, whatever ships its files, and whatever ingests them. It is a directory and a naming convention rather than a protocol, which is what makes the transport swappable: rclone, rsync, a shared mount, or a hand copy all satisfy it, and none of them requires code in the producer or the consumer. Because the convention is duplicated across the tap's constants, the shipper's config, and the analyzer's reader, it is stated here once and each copy is asserted against it by test. Divergence detected beats divergence impossible when the alternative is templating three package formats at build time.",
+
+ "active_segment": "active.jsonl",
+ "sealed_prefix": "seg-",
+ "wal_suffix": ".jsonl",
+ "shipped_suffixes": [".jsonl", ".parquet"],
+ "conversion_tmp_suffix": ".parquet.tmp",
+
+ "sealed_pattern": "seg-<incarnation>-<segment_seq>.jsonl | seg-<incarnation>-<segment_seq>.parquet",
+ "incarnation_pattern": "<run_start_unix_ms>-<pid>",
+
+ "ship_rule": "Ship and ingest only sealed Parquet segments. The write-ahead JSONL never leaves the node: not the active segment, not a sealed WAL awaiting conversion, and never a conversion temporary.",
+ "dest_key_layout": "<prefix>/<utc yyyy-mm-dd>/<utc hh>/<node>/<sealed segment file>",
+ "reserved_consumer_prefix": "_analyzer/",
+ "reserved_consumer_note": "Under <prefix>/, the first segment `_analyzer/` is reserved for the consumer's own objects (its derived tiers, annotations, probes). A shipper never writes beneath it, and an ingester never reads a segment from beneath it. The segment begins with an underscore because no DNS hostname and no date can, so nothing this contract ships can spell it.",
+ "stream": "kv",
+ "stream_note": "One prefix per stream, and the prefix ends in the stream's name: the KV-cache stream ships to <root>/kv/, so the <prefix> every layout rule and dest_key_layout name is <root>/kv/ — the shipper's configured destination and the consumer's configured prefix both end in kv/. A stream's own health records stay in-band under its prefix; a second stream would take a second prefix beside it, never a second layout. The component was born inside the configured prefix on both sides (the tap's INFERTAP_DEST, the analyzer's --bucket-prefix), so entering the contract here renames nothing shipped before it and asks no consumer to walk one level up: the consumer's root is still <root>/kv/.",
+ "shipper_exclude": ["active.jsonl", "*.jsonl", "*.parquet.tmp"],
+
+ "rules": [
+  "Two file classes are in flight: the active segment, and a conversion temporary. Everything else in the directory is terminal: the process that wrote it will not write to it again.",
+  "Every shipped segment is attributed: it begins with its own segment_open. A file whose header cannot be read is not a segment (spec 4.3, since 1.11): the producer that finds it unlinks it and declares the discard with a segment_recovered record in the first segment of its own incarnation. The write-ahead JSONL awaiting conversion is terminal to its writer but not shippable; its Parquet twin ships in its place.",
+  "The active segment must never be shipped or ingested. It is not merely incomplete — its CONTENT WILL CHANGE, and batch identity downstream is the content hash, so reading it now and reading the sealed version later stores every overlapping record twice.",
+  "Segment continuity is scoped to (instance, incarnation). A fresh incarnation starting at segment_seq 0 is a restart, not a gap.",
+  "Identity lives in the file's first record (segment_open), not in its name. Filenames carry the same fields for the shipper and for humans, but binding correctness to them would bind it to a property of the transport rather than of the data.",
+  "A shipper must treat a vanished source file as an expected outcome, not a retryable error: the disk-cap ring can unlink a segment between the shipper's listing and its open, and a shipper that stalls its queue on ENOENT converts a bounded, recorded drop into total shipping stoppage.",
+  "Retention drops the OLDEST segments first, ordered by (incarnation, segment_seq) with seq compared as a NUMBER. What survives a disk-cap drop is therefore the newest data: a contiguous run of the highest seqs per incarnation. A consumer's coverage math rests on this — it is what makes a declared drop describable as a range, and what lets a surviving window be read as the most recent one. Comparing seq as a string silently inverts it, because `10` sorts before `9`: past ten segments the ring begins preferring newer data for deletion, which is a retention policy that fails exactly when it is needed.",
+  "A declared drop (segments_dropped) is emitted once PER INCARNATION whose segments were reclaimed, and its `incarnation` names the run whose data is gone rather than the process that did the dropping — one enforcement pass can reclaim an earlier run's segments, and the dropping process is readable from the enclosing segment's own header. Grouping is what keeps `first_seq`/`last_seq` a description: within one incarnation the dropped set is contiguous, across incarnations it never is.",
+  "A reader learns a segment's encoding from its content, never from its suffix: a Parquet segment begins with the four bytes PAR1, a JSONL segment with a JSON object (spec 2.1). The suffixes here exist for the shipper and for humans, like the rest of the filename.",
+  "The producer replaces a sealed segment's write-ahead JSONL with its Parquet twin: write the .parquet.tmp, fsync, verify its footer against the records written, rename to .parquet, fsync the directory, and only then delete the JSONL. The delete is last because deleting first would reintroduce, in a crash window, exactly the loss the write-ahead form exists to prevent. Recovery reconciles idempotently: sealed JSONL with no Parquet converts; both present deletes the JSONL, which is safe because a committed .parquet was verified before its rename; a stray .tmp is unlinked.",
+  "The conversion temporary is never terminal and never ships. It is the one file class in the directory besides the active segment whose content can change, and the shipper's exclusion of it is deterministic by name pattern, not timing.",
+  "Destination keys are dated-first, hour-deep, then node: <prefix>/<utc yyyy-mm-dd>/<utc hh>/<node>/<file>. The date and hour are the SHIPPER's UTC clock at ship time. They are a transport affordance, never identity: they let a consumer bound each discovery listing by a watermark hour instead of enumerating the bucket's history, and they assert nothing about the records inside. Ship-time dating is load-bearing, not convenience: a segment shipped late lands under the CURRENT hour, in front of any watermark, so a shipper that was down for a day recovers by construction; seal-time dating would file the same segment behind the watermark, past any bounded lookback.",
+  "The node segment exists for per-node credential isolation and sits INSIDE the date so the dated bound survives. A per-node write policy still pins a node to its own keys via wildcarded paths: PutObject on <prefix>/*/*/<node>/*, and ListBucket under the same shape as a StringLike prefix condition. Node-first would invert discovery into one listing per node per cycle, which fails at exactly the fleet size the layout exists to serve."
+ ],
+
+ "asserted_by": [
+  "infertap: tests/delivery_layout.rs -- the tap's constants, the shipped systemd shipper unit's --exclude argument AND its destination template, parsed from the unit rather than matched by pattern.",
+  "analyzer: crates/ingest -- the candidate rule's suffix and the dated discovery arithmetic, against the vendored copy of this file.",
+  "infertap: tests/delivery_layout.rs -- the shipper's example destination (ship.env.example) ends in the stream component with its own trailing slash.",
+  "analyzer: crates/ingest/tests/contract_layout.rs -- the stream component this file names is the last segment of every documented --bucket-prefix (docs/quickstart.md, the installer's usage, the chart's values), against the vendored copy of this file."
+ ]
+}

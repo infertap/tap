@@ -1,0 +1,18 @@
+{
+ "schema_version": "v0",
+ "producer": {
+  "vllm": "0.26.0",
+  "event_schema": "vllm-0.26.0-map",
+  "msgspec": "0.21.1"
+ },
+ "name": "event_is_tag_array",
+ "note": "the pre-0.26 tag-first array form. Pinned as MALFORMED on purpose: a decoder that still accepted it would silently misread a modern stream",
+ "source": "s0",
+ "wire_hex": "93cb41da99d221898bd19197ab426c6f636b53746f726564920102c09010c0a347505500",
+ "expect": {
+  "error": {
+   "stage": "normalize",
+   "contains": "event is not a map"
+  }
+ }
+}

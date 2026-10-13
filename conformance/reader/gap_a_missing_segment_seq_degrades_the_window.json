@@ -1,0 +1,56 @@
+{
+ "fixture_version": "v0",
+ "name": "gap_a_missing_segment_seq_degrades_the_window",
+ "note": "segments 0 and 2 of one incarnation, seq 1 never delivered: a hole inside the observed sequence is a detected gap (spec 5.4), and the window containing it is indeterminate -- the facts inside must not be classified as though the window were complete",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 0,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b1",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153670000.0,
+    "content_id": "c1"
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 2,
+    "heartbeat_secs": 60,
+    "max_segment_secs": 300
+   },
+   {
+    "kind": "store",
+    "instance_id": "i0",
+    "block_id": "b2",
+    "n_tokens": 16,
+    "tier": "GPU",
+    "dp_rank": 0,
+    "group_idx": 0,
+    "at_ms": 1785153690000.0,
+    "content_id": "c2"
+   }
+  ]
+ ],
+ "expect": {
+  "gap_degraded": [
+   "missing_segment_seq"
+  ]
+ }
+}

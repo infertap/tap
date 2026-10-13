@@ -1,0 +1,129 @@
+{
+ "fixture_version": "v0",
+ "name": "staleness_without_declared_bounds_has_no_basis",
+ "note": "a 1.1-era producer's mid-run segment: heartbeats, then silence past any bound a reader might guess. Every header declares the bounds, so an undeclared stream is only expressible as an old producer the mixed-fleet law (spec 6.2) still admits -- and for it the premise holds exactly: the two declared bounds are the ENTIRE basis for calling a producer stale (spec 5.8), unobserved declarations are outside the stream's knowledge (spec 5.6), and a conforming reader refuses the verdict rather than inventing a threshold",
+ "segments": [
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.1",
+    "incarnation": "1785153600000-100",
+    "segment_seq": 1
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153730000.0,
+    "msgs_seen": 10,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 10,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 10,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785153790000.0,
+    "msgs_seen": 20,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 20,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i0",
+      "endpoint": "tcp://i0:5557",
+      "msgs_seen": 20,
+      "dropped": 0,
+      "last_msg_at_ms": 1785153790000.0
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "kind": "segment_open",
+    "at_ms": 1785153669000.0,
+    "contract_version": "1.11",
+    "incarnation": "1785153900000-200",
+    "segment_seq": 0,
+    "heartbeat_secs": 7200,
+    "max_segment_secs": 14400
+   },
+   {
+    "kind": "agent_start",
+    "at_ms": 1785153670000.0,
+    "agent_version": "0.2.0",
+    "egress": "raw",
+    "endpoint_count": 1,
+    "max_payload_bytes": 1048576
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785158730000.0,
+    "msgs_seen": 40,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 40,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 40,
+      "dropped": 0,
+      "last_msg_at_ms": 1785158730000.0
+     }
+    ]
+   },
+   {
+    "kind": "heartbeat",
+    "at_ms": 1785163790000.0,
+    "msgs_seen": 80,
+    "dropped": 0,
+    "oversized": 0,
+    "unknown_types": 0,
+    "events_ingested": 80,
+    "content_unresolved": 0,
+    "content_bridge_entries": 0,
+    "content_bridge_evicted": 0,
+    "publisher_restarts": 0,
+    "endpoints": [
+     {
+      "source": "i1",
+      "endpoint": "tcp://i1:5557",
+      "msgs_seen": 80,
+      "dropped": 0,
+      "last_msg_at_ms": 1785163790000.0
+     }
+    ]
+   }
+  ]
+ ],
+ "expect": {
+  "staleness": {
+   "1785153600000-100": "no_basis",
+   "1785153900000-200": "live"
+  }
+ }
+}

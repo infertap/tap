@@ -4,7 +4,7 @@
 //! in the same root replacing the first's markers. Needs the live transport, so it runs
 //! under `--all-features`, where CI runs it; the shipper's half is `tests/shipper_drain.rs`.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 #![cfg(feature = "zmq")]
 
 use std::fs;
@@ -106,11 +106,9 @@ fn the_tap_names_its_incarnation_at_open_and_marks_it_closed_after_conversion() 
     let _ = fs::remove_dir_all(&root);
 }
 
-/// A closed incarnation is not a converted one. A segment the converter cannot turn into
-/// its shipped form is still on disk at close; the marker reports it, and the run exits
-/// nonzero saying so, because in a pod that segment is lost with the emptyDir. Before
-/// this, the tap exited 0 with the marker written and the segment left behind, and the
-/// shipper reported success over a segment it excludes.
+/// Unconverted segments remain on disk at close. The marker reports their count and
+/// the tap exits nonzero. They cannot be shipped and are lost if the pod's emptyDir
+/// is deleted.
 #[test]
 fn a_close_that_leaves_a_segment_unconverted_reports_it_and_fails() {
     let root = infertap::testing::scratch("handshake-unconverted");

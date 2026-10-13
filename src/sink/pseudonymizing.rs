@@ -53,8 +53,8 @@ pub struct PseudonymConfig {
 pub struct PseudonymizingSink<S> {
     config: PseudonymConfig,
     context: &'static str,
-    /// The raw id(s) the current record carried, for the no-raw assertion. Cleared and
-    /// refilled per record: it never accumulates, so memory stays O(1) at production rates.
+    /// Raw IDs for the current record's no-raw check. Cleared between records;
+    /// the vector retains capacity for reuse.
     carried: Vec<u128>,
     /// The raw operator strings this record carried, for the same assertion. Cleared and
     /// refilled per record, like `carried`.
@@ -373,10 +373,8 @@ mod tests {
         }
     }
 
-    /// The two identity spaces cannot collide, because they are mapped under different
-    /// contexts. This is what makes "never join across them" a property rather than a rule a
-    /// consumer has to remember: the engine's id is only comparable inside the process that
-    /// computed it, ours is comparable everywhere, and summing them would be meaningless.
+    /// Equal input values use distinct domains for block and content identities.
+    /// This case checks the context selection; hash collisions remain possible.
     #[test]
     fn the_engine_and_content_spaces_are_domain_separated() {
         const SAME: u64 = 12_955_354_968_414_679_641;

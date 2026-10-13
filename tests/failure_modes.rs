@@ -4,7 +4,7 @@
 //! Cover publisher restarts, sequence gaps, truncated writes, and resource limits.
 //! Check collection behavior and the records that describe each failure.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::collections::VecDeque;
 use std::time::Duration;

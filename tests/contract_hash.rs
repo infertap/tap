@@ -6,7 +6,7 @@
 //! Fixture changes must originate upstream; this test cannot update the pin.
 //! CI separately resolves the pinned tag and compares the vendored tree upstream.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};

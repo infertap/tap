@@ -3,7 +3,7 @@
 //! Assert exact fields and values except runtime timestamps and incarnation identifiers,
 //! whose representations are checked independently.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use infertap::testing::jsonl_records as lines;
 use infertap::testing::repo_root as root;

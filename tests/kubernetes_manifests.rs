@@ -4,7 +4,7 @@
 //! Inspect manifest text and execute the identity-building shell command with a
 //! stub binary to verify that separate pods receive distinct instance labels.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use infertap::testing::repo_root as root;
 use std::fs;

@@ -2,10 +2,9 @@
 //! `JsonlSink`: stream records as newline-delimited JSON to any writer, such as a file
 //! or stdout.
 //!
-//! One compact JSON object per line: append-only and readable by line-oriented tools. A
-//! write error is latched rather than raised, because a passive tap reports a full disk
-//! instead of crashing on it. The caller reads the error through [`Sink::write_error`]
-//! during the run, and `flush` reports it at the end.
+//! Writes one compact JSON object per line. The first write error is latched and stops
+//! further writes. The caller checks [`Sink::write_error`] during the run; `flush` also
+//! reports the latched error.
 
 use crate::record::RecordData;
 

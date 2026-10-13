@@ -2,7 +2,7 @@
 //! Replay captured wire payloads through the adapter and transducer to emitted records.
 //! Properties check parent-chain consistency and content identity across the full path.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -94,13 +94,8 @@ fn percent(n: usize, total: usize) -> f64 {
     100.0 * f64::from(n) / f64::from(total)
 }
 
-/// A block hash is content-addressed: it commits to its parent, its tokens, and its extra
-/// keys, so a given block id has exactly one parent everywhere. The prefix chain rests on
-/// that property, and a consumer's dedup metric reads the chain as truth.
-///
-/// Two distinct parents for one block id is therefore a reader defect, not unusual data.
-/// The defect this pins is giving every block in a stored run the run's parent instead of
-/// its predecessor.
+/// Check parent consistency within the captured workload. This catches assigning the
+/// run's parent to every block instead of linking each block to its predecessor.
 #[test]
 fn every_block_in_the_capture_claims_exactly_one_parent() {
     let mut parents: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
@@ -121,8 +116,7 @@ fn every_block_in_the_capture_claims_exactly_one_parent() {
         }
     }
 
-    // Never vacuous: if the capture stopped carrying chained stores, this test must fail
-    // loudly rather than pass over an empty set.
+    // Require enough chained stores to exercise parent consistency.
     assert!(
         with_parent > 10_000,
         "only {with_parent} chained stores in the capture: the corpus or the adapter changed \

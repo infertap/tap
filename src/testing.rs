@@ -4,8 +4,7 @@
 //! feature, which the crate's dev-dependency on itself enables for every test and example
 //! target and which a release build never carries. Nothing here is API.
 
-// Test support opts out of the panic lints the way every test module does: a helper that
-// cannot fail loudly is not a test helper.
+// Setup and fixture failures should fail the calling test.
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::collections::VecDeque;

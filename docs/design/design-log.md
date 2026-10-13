@@ -42,13 +42,19 @@ position rather than by a check.
 
 ## Dependencies (`Cargo.toml`, `tests/static_audit.rs`)
 
-The dependency set is an allowlist pinned by a test. A crate enters when it carries
-something the tap cannot write correctly in a page: Parquet encoding, libzmq, HMAC-SHA256,
-MessagePack, TOML parsing, and serialization. Ergonomic crates stay out. The argument
-parser is hand-written because error text must never echo a value, key material must be
-refused from files and the environment, and one registry must define every option once.
-The run loop is a blocking poll with one worker thread, so no async runtime is needed.
-Errors are typed enums the run loop matches on, so no dynamic error crate is needed.
+The dependency allowlist includes Parquet encoding, libzmq, HMAC-SHA256, MessagePack,
+TOML parsing, and serialization. These libraries provide established implementations
+of the formats and protocols the tap uses.
+
+The CLI uses an explicit parser to control diagnostics and configuration precedence
+without adding a dependency. One option registry drives parsing, layering, and help.
+Errors omit supplied values. Configuration files and environment variables accept a
+key-file path but reject inline key material. These are application policies; a parser
+library would still need to preserve them.
+
+The logger implements the configured text and JSON formats through the `log` facade.
+The run loop uses blocking polling and one conversion worker, so it needs no async
+runtime. Typed error enums let the loop match on failure categories.
 
 ## Two on-disk forms (`src/sink/segments/`, `src/sink/convert.rs`)
 
@@ -61,11 +67,10 @@ name.
 
 ## The no-raw guard (`src/sink/noraw.rs`)
 
-The raw and pseudonymized record types already make a raw identity in mapped output a
-compile error. The scan is a second, independent check on the serialized bytes, so a
-defect in the mapping itself is caught before the record leaves the process. A match is a
-panic rather than a dropped record: the tap's own availability ranks below not shipping a
-content fingerprint, and the engine is unaffected either way.
+Distinct raw and pseudonymized identity types prevent direct assignment between phases.
+The scan adds a check for raw values in serialized output, subject to the exclusions
+below. A match panics before emission to stop potentially unmapped output. The engine
+runs in a separate process; stopping the tap interrupts telemetry collection.
 
 The scan traverses nested serialized values. IDs below 2^32 are excluded because they
 can coincide with counters; this leaves a documented 2^-32 exclusion for uniform hashes.
@@ -101,10 +106,10 @@ delivery layout contract pins the exclusion list both sides assert against.
 
 ## Manifests and units under test (`tests/`)
 
-Kubernetes manifests, systemd units, and the shipper script are asserted by Rust tests
-that parse their text and, where possible, execute them with stubs. The tests run in the
-same `cargo test` invocation as everything else, so a manifest edit cannot pass CI while
-disagreeing with the constants or the contract it depends on.
+Rust tests check selected fields in Kubernetes manifests, systemd units, and the shipper
+script against code constants and the contract. They also execute commands with stubs
+where practical. These tests run under `cargo test`; deployment checks cover behavior
+that the text and stub checks cannot exercise.
 
 ## The content bridge cap (`src/source/wire/content.rs`)
 

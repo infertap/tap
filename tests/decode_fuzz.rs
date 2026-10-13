@@ -6,7 +6,7 @@
 //! large declared lengths must not trigger proportional preallocation.
 //! Fixed mutation patterns make failures reproducible from the corpus.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::fs;
 use std::path::PathBuf;

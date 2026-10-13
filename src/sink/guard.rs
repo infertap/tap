@@ -24,9 +24,7 @@ pub(crate) fn compact_len<P: crate::record::Phase>(record: &RecordData<P>) -> us
         }
     }
     let mut counter = Counter(0);
-    // A record always serializes and the counter never fails. Were either to fail, the
-    // record reads as infinitely large and is refused: fail closed, never a silently
-    // under-measured line.
+    // Treat serialization failure as oversized so check_size rejects the record.
     match serde_json::to_writer(&mut counter, record) {
         Ok(()) => counter.0,
         Err(_) => usize::MAX,

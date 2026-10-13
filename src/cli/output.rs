@@ -100,9 +100,8 @@ impl OutputSink {
                     "sealed {} segment(s); {dropped} dropped to stay under the disk cap",
                     sealed + 1
                 );
-                // The marker says what the incarnation left, so a shipper waiting on it
-                // learns the truth; then the run fails for it, since in a pod those
-                // segments are lost with the emptyDir.
+                // Report unconverted segments to the shipper before returning an error.
+                // In Kubernetes, these segments are lost when the emptyDir is deleted.
                 let unconverted = closed.unconverted.unwrap_or(0);
                 if let Output::Segments(root) = output {
                     mark_closed(root, &incarnation, unconverted);

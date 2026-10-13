@@ -2,7 +2,7 @@
 //! Verify the tap and packaged shippers against the delivery-layout corpus.
 //! Constants, filename patterns, and shipper exclusions must agree with the pinned contract.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use infertap::testing::repo_root as root;
 use std::fs;
@@ -56,10 +56,8 @@ fn the_taps_constants_match_the_contract() {
 
 /// Extract an `ExecStart=` command's arguments from a systemd unit.
 ///
-/// Parsed rather than pattern-matched, and the difference matters: a pattern loose enough to
-/// survive reformatting is loose enough to pass on a *wrong value*, and one tight enough to
-/// catch a wrong value breaks confusingly the first time someone adds a line continuation,
-/// which this unit already uses.
+/// Handles the line continuations and simple quoting used by the packaged units.
+/// This is not a general systemd command parser.
 fn exec_start_args(unit: &str) -> Vec<String> {
     let joined = unit.replace("\\\n", " ");
     let line = joined

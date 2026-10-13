@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //! Pseudonymization and size checks compose over an independently implemented sink.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use infertap::record::RecordData;
 

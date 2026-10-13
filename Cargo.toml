@@ -52,7 +52,7 @@ signal-hook = "0.3"
 zmq = { version = "0.10", optional = true }
 # The shipped-form encoder (spec 2.1): default features off keeps arrow out of the tree, and
 # the snap codec is pure Rust, so the base build still needs no C toolchain.
-parquet = { version = "59.2", default-features = false, features = ["snap"] }
+parquet = { version = "60.0", default-features = false, features = ["snap"] }
 toml = { version = "1.1.6", default-features = false, features = ["parse", "serde"] }
 log = { version = "0.4.34", features = ["std"] }
 fs2 = "0.4.3"
@@ -61,4 +61,4 @@ fs2 = "0.4.3"
 infertap = { path = ".", features = ["testing"] }
 # The round-trip verifier only: tests decode what the converter wrote (and the corpus's
 # pyarrow-written twin) through the arrow reader, a second implementation. Never ships.
-parquet = { version = "59.2", default-features = false, features = ["snap", "arrow"] }
+parquet = { version = "60.0", default-features = false, features = ["snap", "arrow"] }

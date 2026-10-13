@@ -21,9 +21,8 @@ identities across compatible workers, and identify gaps in observation.
 
 The engine baselines are **vLLM 0.30.0** and **SGLang 0.5.20**, selected with `--engine`.
 See [Compatibility and support](docs/compatibility.md) for parallelism, LoRA, offload,
-and identity limitations. The first release, 0.1.0, is in
-preparation; before 1.0, a minor release may change a documented interface, and the
-changelog names every such change.
+and identity limitations. Before 1.0, a minor release may change a documented interface;
+the changelog names every such change.
 
 ## Try it without a GPU
 

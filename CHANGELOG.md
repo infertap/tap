@@ -4,9 +4,9 @@ Notable changes to InferTap. Release tags use `vX.Y.Z` and follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The supported interfaces and
 upgrade requirements are defined in [the compatibility policy](docs/compatibility.md).
 
-## [Unreleased]
+## [0.1.0]
 
-The first public release, 0.1.0, is in preparation.
+First public release.
 
 ### Added
 
@@ -36,11 +36,10 @@ The first public release, 0.1.0, is in preparation.
 
 - The CLI, configuration, emitted record contract, and documented deployment behavior
   are the supported interfaces. Internal Rust modules are not a supported SDK.
-- The live-transport Cargo feature is `zmq`. It was `vllm-zmq` before the SGLang engine
-  landed; a build script or Dockerfile that names the old feature must change.
+- The live-transport Cargo feature is `zmq`.
 - Content identities retain 128 bits; pseudonyms remain 32 hexadecimal characters.
 - The record contract is 2.1, pinned by commit and corpus hash in `SPEC_PIN`.
 - The engine support baseline and limitations are listed in
   [the compatibility policy](docs/compatibility.md).
 
-[Unreleased]: https://github.com/infertap/tap/commits/main
+[0.1.0]: https://github.com/infertap/tap/releases/tag/v0.1.0

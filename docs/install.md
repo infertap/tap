@@ -7,7 +7,7 @@ the publisher before starting the engine.
 
 ## Get the binary
 
-The first release, 0.1.0, is in preparation. Until a release is published, build from a checkout:
+To build from a checkout:
 
 ```sh
 cargo build --release --features zmq --locked

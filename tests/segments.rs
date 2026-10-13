@@ -3,7 +3,7 @@
 //!
 //! Check record completeness, segment immutability, headers, and incarnation scope.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use infertap::testing::jsonl_records as lines;
 use std::fs;
@@ -301,8 +301,7 @@ fn an_orphan_with_no_complete_record_is_discarded() {
 
 // --- sealing triggers and the ring ------------------------------------------------------
 
-/// A quiet instance must still seal, or its heartbeats never ship and it is indistinguishable
-/// from a dead one. Time is the ceiling that guarantees it.
+/// Age-based sealing makes heartbeats eligible for shipping below the size threshold.
 #[test]
 fn a_quiet_instance_still_seals_on_the_time_ceiling() {
     let dir = scratch("quiet");
@@ -711,12 +710,8 @@ fn an_undeclared_workload_class_is_absent_from_the_header() {
     );
 }
 
-/// Every header declares the liveness bounds, and it declares what the producer promised.
-///
-/// They are the entire basis on which a reader may call this producer stale (contract section
-/// 5.8), and an analysis window need not contain the run's start record, so a header that
-/// stated a default instead of the configured bound would have a reader judging against a
-/// promise nobody made.
+/// Readers may not have the start record. Each segment header must carry the configured
+/// liveness bounds used to detect stale producers (contract section 5.8).
 #[test]
 fn every_header_declares_the_configured_liveness_bounds() {
     let dir = scratch("bounds");

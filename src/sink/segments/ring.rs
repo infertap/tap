@@ -83,8 +83,8 @@ pub(super) struct GroupReclaim {
     declared: Option<Sealed>,
 }
 
-/// Unlink every file of one identity. A pair mid-conversion drops atomically, so the
-/// caller never re-checks its budget between these files.
+/// Attempt to unlink every file of one identity before the caller rechecks its budget.
+/// Individual deletions can fail; the result accounts for partial reclamation.
 pub(super) fn reclaim_group(
     files: &[Sealed],
     undeletable: &mut Option<(u64, io::Error)>,
@@ -107,9 +107,7 @@ pub(super) fn reclaim_group(
                 out.bytes = out.bytes.saturating_add(seg.size);
                 out.any_gone = true;
             }
-            // Skip to the next file rather than give up: enforcing the bound on what can be
-            // deleted beats leaving the disk unbounded, and the mid-sequence gap it leaves
-            // is the structural signal doing its job.
+            // Continue reclaiming other files and report deletion failures to the caller.
             Unlink::Undeletable(e) => match undeletable {
                 Some((n, _)) => *n += 1,
                 None => *undeletable = Some((1, e)),

@@ -158,9 +158,8 @@ fn push_value(
     Ok(())
 }
 
-/// Push one definition level and, for a repeated leaf, one repetition level. Levels count
-/// toward the byte bound: an all-null stretch still costs memory, and a bound that cannot
-/// see that cost is not a bound.
+/// Push definition and repetition levels, counting their bytes toward the buffer limit.
+/// Even an all-null column consumes memory for these levels.
 fn push_levels(buf: &mut LeafBuf, bytes: &mut usize, def: i16, rep: Option<i16>) {
     buf.defs.push(def);
     *bytes += 2;

@@ -5,7 +5,7 @@
 //! message. The fixture reader is shared with `tests/vllm_wire.rs`; the profile is what
 //! differs.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::fs;
 use std::path::PathBuf;

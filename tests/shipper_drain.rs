@@ -8,7 +8,7 @@
 //! failure; a slow backlog cannot outrun the wait; and an unavailable destination ends in
 //! a bounded, nonzero, logged drain.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -332,9 +332,8 @@ fn a_missing_incarnation_is_waited_for_and_is_a_failure_if_it_never_comes() {
     let _ = fs::remove_dir_all(&rig.root);
 }
 
-/// A closed incarnation is not a converted one: a marker reporting segments left
-/// unconverted ends the wait, ships what converted, and exits 1 naming the count. An
-/// unreadable marker is treated the same, never as complete.
+/// A marker with unconverted segments ends the wait. The shipper uploads converted
+/// segments, reports the remaining count, and exits 1.
 #[test]
 fn a_close_that_left_segments_unconverted_is_a_visible_failure() {
     let rig = Rig::new("unconverted", "600-1");

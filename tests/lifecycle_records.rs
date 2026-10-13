@@ -5,7 +5,7 @@
 //! scannable to flag, and the metadata guard passes them. A graceful stream ends with the
 //! `agent_stop` record as its last complete line.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::fs;
 use std::path::PathBuf;

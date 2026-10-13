@@ -49,10 +49,10 @@ record previous workloads and results.
 
 ## Dependencies
 
-The dependency set is an allowlist that `tests/static_audit.rs` pins. A crate enters when
-it carries something the tap cannot write correctly in a page, not for ergonomics; see
-[Dependencies](docs/design/design-log.md#dependencies-cargotoml-testsstatic_auditrs) for the
-reasoning behind the hand-written argument parser, logger, and error types. A new
+The dependency set is an allowlist that `tests/static_audit.rs` pins. Dependency review
+weighs correctness and maintenance benefits against added code and supply-chain exposure.
+See [Dependencies](docs/design/design-log.md#dependencies-cargotoml-testsstatic_auditrs)
+for the current choices, including the argument parser, logger, and error types. A new
 dependency needs a one-sentence justification in the allowlist, a `deny.toml` review, and
 regenerated `THIRD-PARTY-NOTICES`.
 

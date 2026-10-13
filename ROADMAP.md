@@ -5,8 +5,6 @@ through issues and the [contribution process](CONTRIBUTING.md).
 
 ## Current priorities
 
-- Complete the [release procedure](docs/release-acceptance.md) for the 0.1.0 candidate,
-  including signed artifacts and publication checks.
 - Track vLLM event-schema changes and maintain the documented support baseline.
 - Expand captured conformance data for ranks, KV groups, LoRA, and offload through the
   inference-events repository.

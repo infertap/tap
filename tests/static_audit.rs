@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-//! Source-policy checks: retain the unsafe-code prohibition and reject shell
-//! execution or dynamic execution in deployed source.
+//! Source-text checks for lint settings, selected API spellings, and dependency policy.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -29,7 +28,7 @@ fn unsafe_is_forbidden_at_the_crate_level() {
         cargo.contains("unsafe_code = \"forbid\""),
         "Cargo.toml must keep [lints.rust] unsafe_code = \"forbid\""
     );
-    // and nothing may quietly re-allow it
+    // Check for explicit attempts to re-enable unsafe code.
     let mut sources = Vec::new();
     rust_sources(&manifest_dir().join("src"), &mut sources);
     for path in &sources {
@@ -44,10 +43,8 @@ fn unsafe_is_forbidden_at_the_crate_level() {
 
 #[test]
 fn no_listeners_and_no_unsanctioned_outbound_in_the_source_tree() {
-    // The binary binds no listening port and reaches out only via the ZMQ SUB connect to
-    // operator-configured endpoints. Structurally enforced: no listener or raw-socket API
-    // appears anywhere, and the socket layer is confined to the one feature-gated transport
-    // file.
+    // Check selected socket API spellings and keep direct ZMQ calls in transport.rs.
+    // This source-text check does not analyze aliases or dependency behavior.
     let mut sources = Vec::new();
     rust_sources(&manifest_dir().join("src"), &mut sources);
     for path in &sources {
@@ -71,9 +68,8 @@ fn no_listeners_and_no_unsanctioned_outbound_in_the_source_tree() {
 
 #[test]
 fn dependency_set_is_the_reviewed_allowlist() {
-    // Every dependency is justifiable in one sentence, and none of them is a network stack:
-    // the only crate that can open a socket is zmq, optional and feature-gated. A new
-    // dependency fails this test until it is reviewed and added here deliberately.
+    // Record the purpose of each direct dependency. Additions require review and an
+    // allowlist update. The list does not constrain transitive dependency behavior.
     let cargo = fs::read_to_string(manifest_dir().join("Cargo.toml")).expect("Cargo.toml");
     let deps: Vec<String> = cargo
         .lines()
@@ -112,8 +108,8 @@ fn no_shell_outs_or_dynamic_exec_in_the_source_tree() {
     let mut sources = Vec::new();
     rust_sources(&manifest_dir().join("src"), &mut sources);
     assert!(!sources.is_empty());
-    // process::Command covers shell-outs; libc:: covers raw exec/syscall reaches. The only
-    // std::process item the binary uses is ExitCode.
+    // Flag these direct process and syscall API spellings for review. As with the
+    // socket check, aliases and dependency behavior are outside this check's scope.
     for path in &sources {
         let text = fs::read_to_string(path).expect("read source");
         for forbidden in ["process::Command", "libc::"] {

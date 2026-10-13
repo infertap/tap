@@ -639,8 +639,7 @@ mod tests {
         }
     }
 
-    /// A wildcard is the engine's bind shape. The tap dials, so accepting a wildcard here
-    /// would connect to nothing and read as a silent zero forever.
+    /// Wildcard addresses are for engine binding. The tap needs a concrete connect address.
     #[test]
     fn a_wildcard_engine_endpoint_is_refused_as_the_engines_bind_shape() {
         let e = parse(&["--engine-endpoint", "i0=tcp://*:5557"])
@@ -649,8 +648,7 @@ mod tests {
         assert!(e.contains("bind shape"), "{e}");
     }
 
-    /// The bound may be too wide, never too narrow: a narrow bound silently truncates
-    /// coverage, and a silently wrong count is the failure the tap exists to prevent.
+    /// The subscription capacity must cover all configured local ranks.
     #[test]
     fn dp_max_below_dp_local_is_refused() {
         let e = parse(&[
@@ -666,8 +664,7 @@ mod tests {
         assert!(e.contains("below --dp-local"), "{e}");
     }
 
-    /// The dp flags derive ports for --engine-endpoint; beside a manual map alone they are
-    /// a stated intention the tap cannot honor, refused rather than ignored.
+    /// Rank expansion flags require --engine-endpoint; they do not apply to manual maps.
     #[test]
     fn dp_flags_without_an_engine_endpoint_are_refused() {
         let e = parse(&["--endpoints", "i0=tcp://h:5557", "--dp-local", "2"])
@@ -676,8 +673,6 @@ mod tests {
         assert!(e.contains("--engine-endpoint"), "{e}");
     }
 
-    /// A replay ring belongs to an engine this tap subscribes; naming one for an
-    /// unconfigured engine is a stated mistake, refused rather than silently ignored.
     #[test]
     fn a_replay_endpoint_for_an_unconfigured_engine_is_refused() {
         let e = parse(&[
@@ -691,7 +686,6 @@ mod tests {
         assert!(e.contains("names no --engine-endpoint"), "{e}");
     }
 
-    /// The replay map expands per rank exactly like the main one, onto the SAME source keys.
     #[test]
     fn replay_endpoints_expand_onto_the_same_source_keys() {
         let options = parse(&[
@@ -765,8 +759,6 @@ mod tests {
         assert!(e.contains("twice"), "{e}");
     }
 
-    // Config parsing rejects rather than coerces: a wrong-typed value is an error, never a
-    // silent default.
     #[test]
     fn wrong_typed_values_are_rejected_not_coerced() {
         assert!(parse(&["--key-epoch", "-1"]).is_err());
@@ -775,8 +767,6 @@ mod tests {
         assert!(parse(&["--poll-timeout-ms", "250ms"]).is_err());
     }
 
-    // Degenerate bounds are rejected at the door, same rule as wrong types: a value the run
-    // loop cannot honor (or would panic on) is a parse error, never a surprise later.
     #[test]
     fn degenerate_bounds_are_rejected_at_parse() {
         // 0 would busy-spin the poll loop on the node the engine serves from
@@ -785,8 +775,9 @@ mod tests {
         assert!(parse(&["--duration", "-1"]).is_err());
         assert!(parse(&["--duration", "NaN"]).is_err());
         assert!(parse(&["--duration", "inf"]).is_err());
-        assert!(parse(&["--duration", "0"]).is_ok()); // zero is representable: an empty window
-                                                      // a memory bound below the tap's own healthy working set kills a correct run
+        // Zero selects an empty collection window.
+        assert!(parse(&["--duration", "0"]).is_ok());
+        // Reject a memory limit below the supported minimum.
         assert!(parse(&["--max-rss-bytes", "1048576"]).is_err());
         assert!(parse(&["--max-rss-bytes", "0"]).is_ok()); // the explicit opt-out
         assert!(parse(&["--max-rss-bytes", "805306368"]).is_ok());

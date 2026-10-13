@@ -3,7 +3,7 @@
 //! Valid fixtures use captured payloads with independently derived expected events.
 //! Malformed fixtures assert the error stage and message.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use std::fs;
 use std::path::PathBuf;
@@ -233,15 +233,9 @@ fn load_fixture(name: &str) -> (Value, Vec<u8>) {
     infertap::testing::wire_fixture("vllm-wire", name)
 }
 
-/// A clear at the wire layer leaves the map population equal to the new resident set.
-///
-/// One bridge is carried across payloads, as the live pipeline carries it. `stored_root`
-/// makes identity promises, since its run roots and every block derives. `cleared_all` is
-/// a bulk evict for that scope's GPU tier and must leave the population at the resident
-/// set, which is empty, not a map of tombstones that would present as working while
-/// resolving nothing. The unscoped variant releases the same way with no declared scope,
-/// and is counted. Per-tier reference-count semantics are pinned in the content module's
-/// unit tests; this pins the wire-to-bridge wiring.
+/// Carry one bridge across store and clear payloads, as the live pipeline does.
+/// Rank-scoped and fully unscoped clears remove the stored entries. Both fixtures omit
+/// group and tier, so both increment the undeclared-scope counter.
 #[test]
 fn a_clear_leaves_the_bridge_population_at_the_resident_set() {
     let mut bridge = ContentBridge::default();

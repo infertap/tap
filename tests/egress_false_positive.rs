@@ -3,7 +3,7 @@
 //! unmapped fields. Legitimate coincidences must not abort emission; unexpected new
 //! occurrences remain failures.
 
-#![allow(clippy::unwrap_used, clippy::expect_used)] // a test that cannot fail loudly is not a test
+#![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use infertap::clock::EngineMs;
 use infertap::compute::Transducer;

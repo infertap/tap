@@ -24,8 +24,7 @@ missing_debug_implementations = "warn"
 [lints.clippy]
 all = "warn"
 pedantic = "warn"
-# A panic in library or binary code is a decision with a reason on the line, never a
-# reflex: each remaining `expect` names why it cannot fire, and tests opt out per module.
+# Production `expect` calls document their invariants. Tests allow unwraps and expects.
 unwrap_used = "warn"
 expect_used = "warn"
 

@@ -44,7 +44,7 @@ inference-events = { version = "1.0.0", path = "vendor/inference-events" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha2 = "0.10"
-hmac = "0.12"
+hmac = "0.13"
 base64 = "0.22"
 hex = "0.4"
 rmp-serde = "1"
